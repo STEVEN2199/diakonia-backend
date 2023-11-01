@@ -30,4 +30,6 @@ Route::middleware('auth:sanctum')->group( function(){
 });
 
 Route::post('readData',[ReadDataController::class, 'storeData']);
+Route::get('AllData',[ReadDataController::class, 'AllData']);
+Route::get('AllInstituciones',[ReadDataController::class, 'AllInstituciones']);
 

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Sectorizacion extends Model
 {
     use HasFactory;
+    protected $table = 'sectorizacion';
     protected $fillable=['nombre_sectorizacion'];
 
     public function instituciones()

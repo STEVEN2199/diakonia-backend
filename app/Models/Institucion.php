@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Institucion extends Model
 {
     use HasFactory;
+    protected $table = 'institucion';
     protected $fillable=['nombre','representante_legal','ruc','numero_beneficiarios'];
 
     public function caracterizaciones()

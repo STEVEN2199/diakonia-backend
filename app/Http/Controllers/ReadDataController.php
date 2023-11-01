@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response; // Agrega esta línea para importar la clase Response
+use App\Models\Institucion;
+use App\Models\Contacto;
 
 class ReadDataController extends Controller
 {
@@ -23,4 +25,20 @@ class ReadDataController extends Controller
         }
         return response()->json(['message' => 'Datos guardados exitosamente']);*/
     }
+
+    public function AllData()
+    {
+        return Institucion::all();
+
+    }
+
+    public function AllInstituciones(Request $request) {
+        $query = DB::table('institucion')
+            ->join('estado', 'institucion.id', '=', 'estado.institucion_id')
+            ->get();
+
+        return $query->toArray();
+    }
+
+
 }
