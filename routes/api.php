@@ -33,3 +33,6 @@ Route::post('readData',[ReadDataController::class, 'storeData']);
 Route::get('AllData',[ReadDataController::class, 'AllData']);
 Route::get('AllInstituciones',[ReadDataController::class, 'AllInstituciones']);
 
+Route::get('DataInstituciones',[ReadDataController::class, 'DataInstituciones']);
+Route::get('DataInstitucionesId/{id}',[ReadDataController::class, 'DataInstitucionesId']);
+
