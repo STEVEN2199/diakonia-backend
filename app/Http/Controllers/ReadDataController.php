@@ -148,6 +148,21 @@ class ReadDataController extends Controller
         return $instituciones->toArray();
     }
 
+    public function DataInstitucionesDirecciones(Request $request) {
+        $instituciones = DB::table('institucion')->get();
+
+        foreach ($instituciones as $institucion) {
+            $direccion = DB::table('direccion')
+                ->where('direccion.institucion_id', $institucion->id)
+                ->select('direccion.*')
+                ->get();
+
+            $institucion->direccion = $direccion;
+        }
+
+        return $instituciones->toArray();
+    }
+
 
     public function DataInstitucionesId(Request $request, string $id) {
         $instituciones = DB::table('institucion')

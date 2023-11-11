@@ -35,4 +35,4 @@ Route::get('AllInstituciones',[ReadDataController::class, 'AllInstituciones']);
 
 Route::get('DataInstituciones',[ReadDataController::class, 'DataInstituciones']);
 Route::get('DataInstitucionesId/{id}',[ReadDataController::class, 'DataInstitucionesId']);
-
+Route::get('DataInstitucionesDirecciones',[ReadDataController::class, 'DataInstitucionesDirecciones']);
