@@ -54,4 +54,11 @@ class AuthController extends Controller
         ])->withCookie($cookie);
     }
 
+    public function AllUsers()
+    {
+        return User::all();
+
+    }
+
+
 }

@@ -29,6 +29,8 @@ Route::middleware('auth:sanctum')->group( function(){
     Route::post('logout',[AuthController::class, 'logout']);
 });
 
+Route::get('DataUsers',[AuthController::class, 'AllUsers']);
+
 Route::post('readData',[ReadDataController::class, 'storeData']);
 Route::get('AllData',[ReadDataController::class, 'AllData']);
 Route::get('AllInstituciones',[ReadDataController::class, 'AllInstituciones']);
