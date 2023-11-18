@@ -13,17 +13,108 @@ use App\Models\Contacto;
 
 class ReadDataController extends Controller
 {
-    public function storeData(Request $request)
-    {
+    public function readData(Request $request){
         $data = $request->input('data');
 
-        dd($data);
-        /*
         foreach ($data as $row) {
-            // Aquí puedes guardar cada fila en la base de datos
-            DB::table('tu_tabla')->insert((array) $row);
+            $institucion = Institucion::firstOrCreate(
+                ['nombre' => $row['nombre']],
+                ['representante_legal' => $row['representante_legal']],
+                ['ruc' => $row['ruc']],
+                ['numero_beneficiarios' => $row['numero_beneficiarios']],
+
+            );
+
+            if (isset($row['direccion'])) {
+                foreach ($row['direccion'] as $direccionData) {
+                    $direccion = new Direccion($direccionData);
+                    $direccion->institucion()->associate($institucion);
+                    $direccion->save();
+                }
+            }
+
+            if (isset($row['tipos_poblacion'])) {
+                foreach ($row['tipos_poblacion'] as $poblacionData) {
+                    $tipos_poblacion = new Direccion($poblacionData);
+                    $tipos_poblacion->institucion()->associate($institucion);
+                    $tipos_poblacion->save();
+                }
+            }
+
+            if (isset($row['estado'])) {
+                foreach ($row['estado'] as $estadoData) {
+                    $estado = new Direccion($estadoData);
+                    $estado->institucion()->associate($institucion);
+                    $estado->save();
+                }
+            }
+
+            if (isset($row['red_bda'])) {
+                foreach ($row['red_bda'] as $redBdaData) {
+                    $redBda = new RedBda($redBdaData);
+                    $redBda->institucion()->associate($institucion);
+                    $redBda->save();
+                }
+            }
+
+            if (isset($row['caracterizaciones'])) {
+                $caracterizaciones = collect($row['caracterizaciones'])->map(function ($nombre) {
+                    return Caracterizacion::firstOrCreate(['nombre_caracterizacion' => $nombre]);
+                });
+
+                $institucion->caracterizaciones()->syncWithoutDetaching($caracterizaciones->pluck('id'));
+            }
+
+            if (isset($row['actividades'])) {
+                $actividades = collect($row['actividades'])->map(function ($nombre) {
+                    return Actividad::firstOrCreate(['nombre_actividad' => $nombre]);
+                });
+
+                $institucion->actividades()->syncWithoutDetaching($actividades->pluck('id'));
+            }
+
+            if (isset($row['sectorizacion'])) {
+                $sectorizacion = collect($row['sectorizacion'])->map(function ($nombre) {
+                    return Sectorizacion::firstOrCreate(['nombre_sectorizacion' => $nombre]);
+                });
+
+                $institucion->sectorizacion()->syncWithoutDetaching($sectorizacion->pluck('id'));
+            }
+
+            if (isset($row['contactos'])) {
+                foreach ($row['contactos'] as $contactoData) {
+                    $contacto = new Contacto([
+                        'nombre' => $contactoData['nombre'],
+                        'apellido' => $contactoData['apellido'],
+                        // Agrega aquí el resto de los campos del contacto
+                    ]);
+
+                    $contacto->institucion()->associate($institucion);
+                    $contacto->save();
+
+                    if (isset($contactoData['correos'])) {
+                        foreach ($contactoData['correos'] as $correoData) {
+                            $correo = new ContactoCorreo($correoData);
+                            $correo->contacto()->associate($contacto);
+                            $correo->save();
+                        }
+                    }
+
+                    if (isset($contactoData['telefonos'])) {
+                        foreach ($contactoData['telefonos'] as $telefonoData) {
+                            $telefono = new ContactoTelefono($telefonoData);
+                            $telefono->contacto()->associate($contacto);
+                            $telefono->save();
+                        }
+                    }
+                }
+            }
+
+
+            // Repite este proceso para las otras relaciones (actividades, tipo de población, etc.)
         }
-        return response()->json(['message' => 'Datos guardados exitosamente']);*/
+
+        return response()->json(['success' => true]);
     }
 
     public function AllData()
