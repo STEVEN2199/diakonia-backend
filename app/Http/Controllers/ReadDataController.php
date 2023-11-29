@@ -364,4 +364,14 @@ class ReadDataController extends Controller
 
         return $instituciones->toArray();
     }
+
+    public function obtenerCaracterizaciones(){
+        $caracterizaciones = DB::table('caracterizacion')->get();
+        return $caracterizaciones->toArray();
+    }
+
+    public function obtenerSectores(){
+        $sectores = DB::table('sectorizacion')->get();
+        return $sectores->toArray();
+    }
 }
