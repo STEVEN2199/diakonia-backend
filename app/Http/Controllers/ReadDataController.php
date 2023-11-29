@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Actividad_institucion;
+use App\Models\Caracterizacion_institucion;
+use App\Models\Clasificacion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth; // Agrega esta línea para importar la clase Auth
 use Illuminate\Support\Facades\Hash;
@@ -10,6 +13,12 @@ use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response; // Agrega esta línea para importar la clase Response
 use App\Models\Institucion;
 use App\Models\Contacto;
+use App\Models\Contacto_correo;
+use App\Models\Contacto_telefono;
+use App\Models\Direccion;
+use App\Models\Estado;
+use App\Models\Red_bda;
+use Symfony\Component\Console\Input\Input;
 
 class ReadDataController extends Controller
 {
@@ -373,5 +382,82 @@ class ReadDataController extends Controller
     public function obtenerSectores(){
         $sectores = DB::table('sectorizacion')->get();
         return $sectores->toArray();
+    }
+
+    public function registrarInstitucion(Request $request){
+
+        $institucion = Institucion::create([
+            "nombre" => $request->input('nombre_institucion'),
+            "representante_legal" => $request->input('representante_legal'),
+            "ruc" => $request->input('ruc'),
+            "numero_beneficiarios" => $request->input('numero_beneficiarios')
+        ]);
+
+        $id_institucion = $institucion->id;
+
+        $actividad_institucion = Actividad_institucion::create([
+            'actividad_id' => $request->input('actividad_id'),
+            'institucion_id' => $id_institucion
+        ]);
+
+        $caracterizacion_institucion = Caracterizacion_institucion::create([
+            'caracterizacion_id' => $request->input('caracterizacion_id'),
+            'institucion_id' => $id_institucion,
+        ]);
+
+        $clasificacion = Clasificacion::create([
+            'nombre_clasificacion' => $request->input('nombre_clasificacion'),
+            'condicion' => $request->input('condicion'),
+            'institucion_id' => $id_institucion
+
+        ]);
+
+        $contacto = Contacto::create([
+            'nombre' => $request->input('nombre_contacto'),
+            'apellido' => $request->input('apellido_contacto'),
+            'institucion_id' => $id_institucion,
+
+        ]);
+
+        $id_contacto = $contacto->id;
+
+        $correo_contacto = Contacto_correo::create([
+            'correo_contacto' => $request->input('correo_contacto'),
+            'contacto_id' => $id_contacto
+        ]);
+
+        $contacto_telefono = Contacto_telefono::create([
+            'telefono_contacto' => $request->input('telefono_contacto'),
+            'contacto_id' => $id_contacto
+        ]);
+
+        $direccion = Direccion::create([
+            'direccion_nombre' => $request->input('direccion'),
+            'url_direccion' => $request->input('url_direccion'),
+            'latitud'=> $request->input('latitud'),
+            'longitud' => $request->input('longitud'),
+            'institucion_id' => $id_institucion,
+        ]);
+
+        $estado = Estado::create([
+            'nombre_estado' => $request->input('nombre_estado'),
+            'institucion_id' => $id_institucion,
+        ]);
+
+        $red_bda = Red_bda::create([
+            'mes_ingreso' => $request->input('mes_ingreso'),
+            'anio_ingreso' => $request->input('anio_ingreso'),
+            'institucion_id' => $id_institucion,
+
+        ]);
+
+        
+        return response([
+            'message' => 'OK',
+            'institucion' => $institucion->id
+
+        ], Response::HTTP_ACCEPTED);
+
+
     }
 }

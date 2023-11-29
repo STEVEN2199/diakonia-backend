@@ -40,3 +40,5 @@ Route::get('DataInstitucionesId/{id}',[ReadDataController::class, 'DataInstituci
 Route::get('DataInstitucionesDirecciones',[ReadDataController::class, 'DataInstitucionesDirecciones']);
 Route::get('caracterizacion', [ReadDataController::class, 'obtenerCaracterizaciones']);
 Route::get('sectores', [ReadDataController::class, 'obtenerSectores']);
+
+Route::post('ingresarInstitucion', [ReadDataController::class, 'registrarInstitucion']);
