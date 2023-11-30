@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Actividad;
 use App\Models\Actividad_institucion;
 use App\Models\Caracterizacion_institucion;
 use App\Models\Clasificacion;
@@ -18,105 +19,86 @@ use App\Models\Contacto_telefono;
 use App\Models\Direccion;
 use App\Models\Estado;
 use App\Models\Red_bda;
+use App\Models\Tipo_poblacion;
+use App\Models\Caracterizacion;
+use App\Models\Sectorizacion;
 use Symfony\Component\Console\Input\Input;
 
 class ReadDataController extends Controller
 {
     public function readData(Request $request)
     {
+        $request->validate([
+            "data" => "required"
+        ]);
         $data = $request->input('data');
         foreach ($data as $row) {
             $institucion = Institucion::firstOrCreate(
-                ['nombre' => $row['nombre']],
+                ['nombre' => $row['nombre_de_las_instituciones']],
                 ['representante_legal' => $row['representante_legal']],
                 ['ruc' => $row['ruc']],
-                ['numero_beneficiarios' => $row['numero_beneficiarios']],
-
+                ['numero_beneficiarios' => intval($row['número_de_beneficiarios'])],
             );
 
-            if (isset($row['direccion'])) {
-                foreach ($row['direccion'] as $direccionData) {
-                    $direccion = new Direccion($direccionData);
-                    $direccion->institucion()->associate($institucion);
-                    $direccion->save();
-                }
+            if (isset($row['dirección'])) {
+                $coords = explode(",", $row["latitud_y_longitud"]);
+                Direccion::firstOrCreate([
+                    "direccion_nombre" => $row["dirección"],
+                    "url_direccion" => $row["direccion_(google_maps)"],
+                    "latitud" => floatval($coords[0]),
+                    "longitud" => floatval($coords[1]),
+                    "institucion_id" => $institucion->id,
+                ]);
             }
 
-            if (isset($row['tipos_poblacion'])) {
-                foreach ($row['tipos_poblacion'] as $poblacionData) {
-                    $tipos_poblacion = new Direccion($poblacionData);
-                    $tipos_poblacion->institucion()->associate($institucion);
-                    $tipos_poblacion->save();
-                }
+            if (isset($row['tipo_de_población'])) {
+                Tipo_poblacion::firstOrCreate([
+                    "tipo_poblacion" => trim($row["tipo_de_población"]),
+                    "institucion_id" => $institucion->id
+                ]);
             }
 
-            if (isset($row['estado'])) {
-                foreach ($row['estado'] as $estadoData) {
-                    $estado = new Direccion($estadoData);
-                    $estado->institucion()->associate($institucion);
-                    $estado->save();
-                }
+            if (isset($row['estatus'])) {
+                Estado::firstOrCreate([
+                    "nombre_estado" => trim($row["estatus"]),
+                    "institucion_id" => $institucion->id,
+                ]);
             }
 
-            if (isset($row['red_bda'])) {
-                foreach ($row['red_bda'] as $redBdaData) {
-                    $redBda = new RedBda($redBdaData);
-                    $redBda->institucion()->associate($institucion);
-                    $redBda->save();
-                }
+            if (isset($row['mes_de_ingreso_red_bda'])) {
+                Red_bda::firstOrCreate([
+                    "mes_ingreso" => $row["anio_ingreso"],
+                    "anio_ingreso" => $row["año_de_ingreso_red_bda"],
+                    "institucion_id" => $institucion->id,
+                ]);
             }
 
-            if (isset($row['caracterizaciones'])) {
-                $caracterizaciones = collect($row['caracterizaciones'])->map(function ($nombre) {
-                    return Caracterizacion::firstOrCreate(['nombre_caracterizacion' => $nombre]);
-                });
-
-                $institucion->caracterizaciones()->syncWithoutDetaching($caracterizaciones->pluck('id'));
+            if (isset($row['caracterización'])) {
+                Caracterizacion::firstOrCreate(['nombre_caracterizacion' => $row["caracterización"]]);
             }
 
-            if (isset($row['actividades'])) {
-                $actividades = collect($row['actividades'])->map(function ($nombre) {
-                    return Actividad::firstOrCreate(['nombre_actividad' => $nombre]);
-                });
-
-                $institucion->actividades()->syncWithoutDetaching($actividades->pluck('id'));
+            if (isset($row['actividad'])) {
+                Actividad::firstOrCreate([
+                    "nombre_actividad" => trim($row["actividad"]),
+                ]);
             }
 
-            if (isset($row['sectorizacion'])) {
-                $sectorizacion = collect($row['sectorizacion'])->map(function ($nombre) {
-                    return Sectorizacion::firstOrCreate(['nombre_sectorizacion' => $nombre]);
-                });
-
-                $institucion->sectorizacion()->syncWithoutDetaching($sectorizacion->pluck('id'));
+            if (isset($row['sectorización'])) {
+                Sectorizacion::firstOrCreate([
+                    "nombre_sectorizacion" => trim($row["sectorización"]),
+                ]);
             }
 
-            if (isset($row['contactos'])) {
-                foreach ($row['contactos'] as $contactoData) {
-                    $contacto = new Contacto([
-                        'nombre' => $contactoData['nombre'],
-                        'apellido' => $contactoData['apellido'],
-                        // Agrega aquí el resto de los campos del contacto
-                    ]);
+            if (isset($row['contacto'])) {
+                $contacto_data = explode(" ", $row["contacto"], strlen($row["contacto"]) ? 2 : 1);
+                $contacto = Contacto::firstOrCreate([
+                    'nombre' => $contacto_data[0],
+                    'apellido' => $contacto_data[1],
+                    // Agrega aquí el resto de los campos del contacto
+                ]);
+                Contacto_correo::firstOrCreate(["correo_contacto" => $row["teléfono"], "contacto_id" => $contacto->id]);
 
-                    $contacto->institucion()->associate($institucion);
-                    $contacto->save();
-
-                    if (isset($contactoData['correos'])) {
-                        foreach ($contactoData['correos'] as $correoData) {
-                            $correo = new ContactoCorreo($correoData);
-                            $correo->contacto()->associate($contacto);
-                            $correo->save();
-                        }
-                    }
-
-                    if (isset($contactoData['telefonos'])) {
-                        foreach ($contactoData['telefonos'] as $telefonoData) {
-                            $telefono = new ContactoTelefono($telefonoData);
-                            $telefono->contacto()->associate($contacto);
-                            $telefono->save();
-                        }
-                    }
-                }
+                Contacto_correo::firstOrCreate(["telefono_contacto" => trim($row["correos"]), "contacto_id" => $contacto->id]);
             }
 
 
