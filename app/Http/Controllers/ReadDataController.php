@@ -33,11 +33,14 @@ class ReadDataController extends Controller
         ]);
         $data = $request->input('data');
         foreach ($data as $row) {
+            error_log(implode(",", $row));
             $institucion = Institucion::firstOrCreate(
-                ['nombre' => $row['nombre_de_las_instituciones']],
-                ['representante_legal' => $row['representante_legal']],
-                ['ruc' => $row['ruc']],
-                ['numero_beneficiarios' => intval($row['número_de_beneficiarios'])],
+                [
+                    'nombre' => $row['nombre_de_las_instituciones'],
+                    'representante_legal' => $row['representante_legal'],
+                    'ruc' => trim($row['ruc']),
+                    'numero_beneficiarios' => intval($row['número_de_beneficiarios'])
+                ],
             );
 
             if (isset($row['dirección'])) {
@@ -67,8 +70,8 @@ class ReadDataController extends Controller
 
             if (isset($row['mes_de_ingreso_red_bda'])) {
                 Red_bda::firstOrCreate([
-                    "mes_ingreso" => $row["anio_ingreso"],
-                    "anio_ingreso" => $row["año_de_ingreso_red_bda"],
+                    "mes_ingreso" => $row["mes_de_ingreso_red_bda"],
+                    "anio_ingreso" => intval($row["año_de_ingreso_red_bda"]),
                     "institucion_id" => $institucion->id,
                 ]);
             }
