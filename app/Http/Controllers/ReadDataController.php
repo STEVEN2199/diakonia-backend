@@ -22,9 +22,9 @@ use Symfony\Component\Console\Input\Input;
 
 class ReadDataController extends Controller
 {
-    public function readData(Request $request){
+    public function readData(Request $request)
+    {
         $data = $request->input('data');
-
         foreach ($data as $row) {
             $institucion = Institucion::firstOrCreate(
                 ['nombre' => $row['nombre']],
@@ -129,10 +129,10 @@ class ReadDataController extends Controller
     public function AllData()
     {
         return Institucion::all();
-
     }
 
-    public function AllInstituciones(Request $request) {
+    public function AllInstituciones(Request $request)
+    {
         $query = DB::table('institucion')
             ->join('estado', 'institucion.id', '=', 'estado.institucion_id')
             ->get();
@@ -140,7 +140,8 @@ class ReadDataController extends Controller
         return $query->toArray();
     }
 
-    public function DataInstituciones(Request $request) {
+    public function DataInstituciones(Request $request)
+    {
         $instituciones = DB::table('institucion')->get();
 
         foreach ($instituciones as $institucion) {
@@ -248,7 +249,8 @@ class ReadDataController extends Controller
         return $instituciones->toArray();
     }
 
-    public function DataInstitucionesDirecciones(Request $request) {
+    public function DataInstitucionesDirecciones(Request $request)
+    {
         $instituciones = DB::table('institucion')->get();
 
         foreach ($instituciones as $institucion) {
@@ -264,10 +266,11 @@ class ReadDataController extends Controller
     }
 
 
-    public function DataInstitucionesId(Request $request, string $id) {
+    public function DataInstitucionesId(Request $request, string $id)
+    {
         $instituciones = DB::table('institucion')
-        ->where('institucion.id', $id)
-        ->get();
+            ->where('institucion.id', $id)
+            ->get();
 
         foreach ($instituciones as $institucion) {
             $actividades = DB::table('actividad')
@@ -374,17 +377,20 @@ class ReadDataController extends Controller
         return $instituciones->toArray();
     }
 
-    public function obtenerCaracterizaciones(){
+    public function obtenerCaracterizaciones()
+    {
         $caracterizaciones = DB::table('caracterizacion')->get();
         return $caracterizaciones->toArray();
     }
 
-    public function obtenerSectores(){
+    public function obtenerSectores()
+    {
         $sectores = DB::table('sectorizacion')->get();
         return $sectores->toArray();
     }
 
-    public function registrarInstitucion(Request $request){
+    public function registrarInstitucion(Request $request)
+    {
 
         $institucion = Institucion::create([
             "nombre" => $request->input('nombre_institucion'),
@@ -434,7 +440,7 @@ class ReadDataController extends Controller
         $direccion = Direccion::create([
             'direccion_nombre' => $request->input('direccion'),
             'url_direccion' => $request->input('url_direccion'),
-            'latitud'=> $request->input('latitud'),
+            'latitud' => $request->input('latitud'),
             'longitud' => $request->input('longitud'),
             'institucion_id' => $id_institucion,
         ]);
@@ -451,13 +457,11 @@ class ReadDataController extends Controller
 
         ]);
 
-        
+
         return response([
             'message' => 'OK',
             'institucion' => $institucion->id
 
         ], Response::HTTP_ACCEPTED);
-
-
     }
 }
