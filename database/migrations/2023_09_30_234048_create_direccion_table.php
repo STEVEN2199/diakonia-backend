@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('direccion', function (Blueprint $table) {
             $table->id();
             $table->string('direccion_nombre',500);
-            $table->string('url_direccion',500);
+            $table->string('url_direccion',1024);
             $table->float('latitud');
             $table->float('longitud');
             $table->foreignId('institucion_id')->constrained('institucion');

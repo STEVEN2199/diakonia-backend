@@ -9,7 +9,7 @@ class Institucion extends Model
 {
     use HasFactory;
     protected $table = 'institucion';
-    protected $fillable=['nombre','representante_legal','ruc','numero_beneficiarios'];
+    protected $fillable = ['nombre', 'representante_legal', 'ruc', 'numero_beneficiarios'];
 
     public function caracterizaciones()
     {
@@ -24,5 +24,10 @@ class Institucion extends Model
     public function sectorizaciones()
     {
         return $this->belongsToMany(Sectorizacion::class, 'sectorizacion__institucion', 'institucion_id', 'sector_id');
+    }
+
+    public function tipo_poblacion()
+    {
+        return $this->hasMany(Tipo_poblacion::class);
     }
 }

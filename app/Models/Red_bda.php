@@ -8,6 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Red_bda extends Model
 {
     use HasFactory;
-    protected $fillable=['mes_ingreso','anio_ingreso','institucion_id'];
-
+    protected $table = "red_bda";
+    protected $fillable = ['mes_ingreso', 'anio_ingreso', 'institucion_id'];
 }

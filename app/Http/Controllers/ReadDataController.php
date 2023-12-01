@@ -22,7 +22,6 @@ use App\Models\Red_bda;
 use App\Models\Tipo_poblacion;
 use App\Models\Caracterizacion;
 use App\Models\Sectorizacion;
-use Symfony\Component\Console\Input\Input;
 
 class ReadDataController extends Controller
 {
@@ -33,10 +32,9 @@ class ReadDataController extends Controller
         ]);
         $data = $request->input('data');
         foreach ($data as $row) {
-            error_log(implode(",", $row));
             $institucion = Institucion::firstOrCreate(
                 [
-                    'nombre' => $row['nombre_de_las_instituciones'],
+                    'nombre' => trim($row['nombre_de_las_instituciones']),
                     'representante_legal' => $row['representante_legal'],
                     'ruc' => trim($row['ruc']),
                     'numero_beneficiarios' => intval($row['número_de_beneficiarios'])
@@ -55,15 +53,16 @@ class ReadDataController extends Controller
             }
 
             if (isset($row['tipo_de_población'])) {
+                error_log($row["tipo_de_población"]);
                 Tipo_poblacion::firstOrCreate([
-                    "tipo_poblacion" => trim($row["tipo_de_población"]),
+                    "tipo_poblacion" => trim(ucwords($row["tipo_de_población"])),
                     "institucion_id" => $institucion->id
                 ]);
             }
 
             if (isset($row['estatus'])) {
                 Estado::firstOrCreate([
-                    "nombre_estado" => trim($row["estatus"]),
+                    "nombre_estado" => trim(strtoupper($row["estatus"])),
                     "institucion_id" => $institucion->id,
                 ]);
             }
@@ -77,7 +76,7 @@ class ReadDataController extends Controller
             }
 
             if (isset($row['caracterización'])) {
-                Caracterizacion::firstOrCreate(['nombre_caracterizacion' => $row["caracterización"]]);
+                Caracterizacion::firstOrCreate(['nombre_caracterizacion' => ucwords($row["caracterización"])]);
             }
 
             if (isset($row['actividad'])) {
@@ -95,13 +94,14 @@ class ReadDataController extends Controller
             if (isset($row['contacto'])) {
                 $contacto_data = explode(" ", $row["contacto"], strlen($row["contacto"]) ? 2 : 1);
                 $contacto = Contacto::firstOrCreate([
-                    'nombre' => $contacto_data[0],
-                    'apellido' => $contacto_data[1],
+                    'nombre' => ucwords($contacto_data[0]),
+                    'apellido' => ucwords($contacto_data[1]),
+                    "institucion_id" => $institucion->id,
                     // Agrega aquí el resto de los campos del contacto
                 ]);
                 Contacto_correo::firstOrCreate(["correo_contacto" => $row["teléfono"], "contacto_id" => $contacto->id]);
 
-                Contacto_correo::firstOrCreate(["telefono_contacto" => trim($row["correos"]), "contacto_id" => $contacto->id]);
+                Contacto_telefono::firstOrCreate(["telefono_contacto" => trim($row["correos"] ?? "no tiene"), "contacto_id" => $contacto->id]);
             }
 
 
