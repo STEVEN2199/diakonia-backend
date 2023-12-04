@@ -416,79 +416,91 @@ class ReadDataController extends Controller
                 'institucion_id' => $institucion->id
             ]);
         }
-        // $actividad_institucion = Actividad_institucion::create([
-        //     'actividad_id' => $request->input('actividad_id'),
-        //     'institucion_id' => $id_institucion
+
+
+        // $caracterizacion_institucion = Caracterizacion_institucion::create([
+        //     'caracterizacion_id' => $request->input('caracterizacion_id'),
+        //     'institucion_id' => $id_institucion,
         // ]);
 
+        // $lista_condiciones = $request->input('condicion');
+        // $total_condiciones = count($lista_condiciones);
+        // for($i = 0; $i < $total_condiciones; $i++){
+        //     $clasificacion = Clasificacion::create([
+        //     'nombre_clasificacion' => $lista_condiciones[$i],
+        //     'condicion' => true,
+        //     'institucion_id' => $id_institucion
 
-        $caracterizacion_institucion = Caracterizacion_institucion::create([
-            'caracterizacion_id' => $request->input('caracterizacion_id'),
-            'institucion_id' => $id_institucion,
-        ]);
+        // ]);
+
+        // }
 
         $clasificacion = Clasificacion::create([
-            'nombre_clasificacion' => $request->input('nombre_clasificacion'),
-            'condicion' => $request->input('condicion'),
+            'nombre_clasificacion' => $request->input('condicion'),
+            'condicion' => true,
             'institucion_id' => $id_institucion
 
         ]);
 
-        // $contacto = Contacto::create([
-        //     'nombre' => $request->input('nombre_contacto'),
-        //     'apellido' => $request->input('apellido_contacto'),
-        //     'institucion_id' => $id_institucion,
+        $contacto = Contacto::create([
+            'nombre' => $request->input('nombre_contacto'),
+            'apellido' => $request->input('apellido_contacto'),
+            'institucion_id' => $id_institucion,
 
-        // ]);
+        ]);
 
-        // $id_contacto = $contacto->id;
-
-        // $correo_contacto = Contacto_correo::create([
-        //     'correo_contacto' => $request->input('correo_contacto'),
-        //     'contacto_id' => $id_contacto
-        // ]);
-
-        // $contacto_telefono = Contacto_telefono::create([
-        //     'telefono_contacto' => $request->input('telefono_contacto'),
-        //     'contacto_id' => $id_contacto
-        // ]);
-
-        // $direccion = Direccion::create([
-        //     'direccion_nombre' => $request->input('direccion'),
-        //     'url_direccion' => $request->input('url_direccion'),
-        //     'latitud'=> $request->input('latitud'),
-        //     'longitud' => $request->input('longitud'),
-        //     'institucion_id' => $id_institucion,
-        // ]);
-
-        // $estado = Estado::create([
-        //     'nombre_estado' => $request->input('nombre_estado'),
-        //     'institucion_id' => $id_institucion,
-        // ]);
-
-        // $red_bda = Red_bda::create([
-        //     'mes_ingreso' => $request->input('mes_ingreso'),
-        //     'anio_ingreso' => $request->input('anio_ingreso'),
-        //     'institucion_id' => $id_institucion,
-
-        // ]);
-
-        // $sectorizacion = Sectorizacion_institucion::create([
-        //     'sector_id' => $request->input('sector_id'),
-        //     'institucion_id' => $id_institucion
-        // ]);
+        $id_contacto = $contacto->id;
+        if (!$id_contacto) {
+            throw new \Exception('Error al obtener el ID del contacto.');
+        }
 
 
-        // $lista_tipo_poblacion = $request->input('tipo_poblacion');
-        // $total_tipo_poblacion = count($lista_tipo_poblacion);
-        // for ($i = 0; $i < $total_tipo_poblacion; $i++) {
-        //     $tipo_poblacion = Tipo_poblacion::create([
-        //         'tipo_poblacion' => $lista_tipo_poblacion[$i],
-        //         'institucion_id' => $id_institucion
+        $correo_contacto = Contacto_correo::create([
+            'correo_contacto' => $request->input('correo_contacto'),
+            'contacto_id' => $id_contacto
+        ]);
+
+        $contacto_telefono = Contacto_telefono::create([
+            'telefono_contacto' => $request->input('telefono_contacto'),
+            'contacto_id' => $id_contacto
+        ]);
+
+        $direccion = Direccion::create([
+            'direccion_nombre' => $request->input('direccion'),
+            'url_direccion' => $request->input('url_direccion'),
+            'latitud'=> $request->input('latitud'),
+            'longitud' => $request->input('longitud'),
+            'institucion_id' => $id_institucion,
+        ]);
+
+        $estado = Estado::create([
+            'nombre_estado' => $request->input('nombre_estado'),
+            'institucion_id' => $id_institucion,
+        ]);
+
+        $red_bda = Red_bda::create([
+            'mes_ingreso' => $request->input('mes_ingreso'),
+            'anio_ingreso' => $request->input('anio_ingreso'),
+            'institucion_id' => $id_institucion,
+
+        ]);
+
+        $sectorizacion = Sectorizacion_institucion::create([
+            'sector_id' => $request->input('sector_id'),
+            'institucion_id' => $id_institucion
+        ]);
+
+
+        $lista_tipo_poblacion = $request->input('tipo_poblacion');
+        $total_tipo_poblacion = count($lista_tipo_poblacion);
+        for ($i = 0; $i < $total_tipo_poblacion; $i++) {
+            $tipo_poblacion = Tipo_poblacion::create([
+                'tipo_poblacion' => $lista_tipo_poblacion[$i],
+                'institucion_id' => $id_institucion
     
-        //     ]);
+            ]);
 
-        // }
+        }
 
         // $tipo_poblacion = Tipo_poblacion::create([
         //     'tipo_poblacion' => ,

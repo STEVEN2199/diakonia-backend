@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Sectorizacion_institucion extends Model
 {
     use HasFactory;
-    //protected $fillable=['sector_id','institucion_id'];
+    protected $table = 'sectorizacion_institucion';
+    protected $fillable=['sector_id','institucion_id'];
 
 }
