@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Caracterizacion_institucion extends Model
 {
     use HasFactory;
-    //protected $fillable=['caracterizacion_id','institucion_id'];
+    protected $table = 'caracterizacion_institucion';
+    protected $fillable=['caracterizacion_id','institucion_id'];
 
 }

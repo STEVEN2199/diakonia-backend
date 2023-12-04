@@ -19,10 +19,13 @@ use App\Models\Contacto_telefono;
 use App\Models\Direccion;
 use App\Models\Estado;
 use App\Models\Red_bda;
+use App\Models\Sectorizacion_institucion;
 use App\Models\Tipo_poblacion;
 use App\Models\Caracterizacion;
 use App\Models\Sectorizacion;
 use PhpParser\Node\Stmt\TryCatch;
+
+use function Laravel\Prompts\info;
 
 class ReadDataController extends Controller
 {
@@ -376,8 +379,21 @@ class ReadDataController extends Controller
         return $sectores->toArray();
     }
 
-    public function registrarInstitucion(Request $request)
-    {
+    public function obtenerActividades(){
+        $actividades = DB::table('actividad')->get();
+        return $actividades->toArray();
+    }
+
+    public function registrarInstitucion(Request $request){
+
+        // try{
+
+        
+
+        // }catch (\Exception $e) {
+        //     info($e);
+
+        // }
 
         $institucion = Institucion::create([
             "nombre" => $request->input('nombre_institucion'),
@@ -388,10 +404,23 @@ class ReadDataController extends Controller
 
         $id_institucion = $institucion->id;
 
-        $actividad_institucion = Actividad_institucion::create([
-            'actividad_id' => $request->input('actividad_id'),
-            'institucion_id' => $id_institucion
-        ]);
+        if (!$id_institucion) {
+            throw new \Exception('Error al obtener el ID de la institución.');
+        }
+
+        $lista_actividades = $request->input('actividad_id');
+        $total_lista_actividades = count($lista_actividades);
+        for ($i = 0; $i <  $total_lista_actividades; $i++) {
+            $actividad_institucion = Actividad_institucion::create([
+                'actividad_id' =>  $lista_actividades[$i],
+                'institucion_id' => $institucion->id
+            ]);
+        }
+        // $actividad_institucion = Actividad_institucion::create([
+        //     'actividad_id' => $request->input('actividad_id'),
+        //     'institucion_id' => $id_institucion
+        // ]);
+
 
         $caracterizacion_institucion = Caracterizacion_institucion::create([
             'caracterizacion_id' => $request->input('caracterizacion_id'),
@@ -405,49 +434,72 @@ class ReadDataController extends Controller
 
         ]);
 
-        $contacto = Contacto::create([
-            'nombre' => $request->input('nombre_contacto'),
-            'apellido' => $request->input('apellido_contacto'),
-            'institucion_id' => $id_institucion,
+        // $contacto = Contacto::create([
+        //     'nombre' => $request->input('nombre_contacto'),
+        //     'apellido' => $request->input('apellido_contacto'),
+        //     'institucion_id' => $id_institucion,
 
-        ]);
+        // ]);
 
-        $id_contacto = $contacto->id;
+        // $id_contacto = $contacto->id;
 
-        $correo_contacto = Contacto_correo::create([
-            'correo_contacto' => $request->input('correo_contacto'),
-            'contacto_id' => $id_contacto
-        ]);
+        // $correo_contacto = Contacto_correo::create([
+        //     'correo_contacto' => $request->input('correo_contacto'),
+        //     'contacto_id' => $id_contacto
+        // ]);
 
-        $contacto_telefono = Contacto_telefono::create([
-            'telefono_contacto' => $request->input('telefono_contacto'),
-            'contacto_id' => $id_contacto
-        ]);
+        // $contacto_telefono = Contacto_telefono::create([
+        //     'telefono_contacto' => $request->input('telefono_contacto'),
+        //     'contacto_id' => $id_contacto
+        // ]);
 
-        $direccion = Direccion::create([
-            'direccion_nombre' => $request->input('direccion'),
-            'url_direccion' => $request->input('url_direccion'),
-            'latitud' => $request->input('latitud'),
-            'longitud' => $request->input('longitud'),
-            'institucion_id' => $id_institucion,
-        ]);
+        // $direccion = Direccion::create([
+        //     'direccion_nombre' => $request->input('direccion'),
+        //     'url_direccion' => $request->input('url_direccion'),
+        //     'latitud'=> $request->input('latitud'),
+        //     'longitud' => $request->input('longitud'),
+        //     'institucion_id' => $id_institucion,
+        // ]);
 
-        $estado = Estado::create([
-            'nombre_estado' => $request->input('nombre_estado'),
-            'institucion_id' => $id_institucion,
-        ]);
+        // $estado = Estado::create([
+        //     'nombre_estado' => $request->input('nombre_estado'),
+        //     'institucion_id' => $id_institucion,
+        // ]);
 
-        $red_bda = Red_bda::create([
-            'mes_ingreso' => $request->input('mes_ingreso'),
-            'anio_ingreso' => $request->input('anio_ingreso'),
-            'institucion_id' => $id_institucion,
+        // $red_bda = Red_bda::create([
+        //     'mes_ingreso' => $request->input('mes_ingreso'),
+        //     'anio_ingreso' => $request->input('anio_ingreso'),
+        //     'institucion_id' => $id_institucion,
 
-        ]);
+        // ]);
+
+        // $sectorizacion = Sectorizacion_institucion::create([
+        //     'sector_id' => $request->input('sector_id'),
+        //     'institucion_id' => $id_institucion
+        // ]);
 
 
+        // $lista_tipo_poblacion = $request->input('tipo_poblacion');
+        // $total_tipo_poblacion = count($lista_tipo_poblacion);
+        // for ($i = 0; $i < $total_tipo_poblacion; $i++) {
+        //     $tipo_poblacion = Tipo_poblacion::create([
+        //         'tipo_poblacion' => $lista_tipo_poblacion[$i],
+        //         'institucion_id' => $id_institucion
+    
+        //     ]);
+
+        // }
+
+        // $tipo_poblacion = Tipo_poblacion::create([
+        //     'tipo_poblacion' => ,
+        //     'institucion_id' => $id_institucion
+
+        // ]);
+        
         return response([
             'message' => 'OK',
-            'institucion' => $institucion->id
+            'institucion' => $institucion,
+            'caracterizacion_institucion'=>$institucion
 
         ], Response::HTTP_ACCEPTED);
     }
