@@ -517,4 +517,18 @@ class ReadDataController extends Controller
 
         ], Response::HTTP_ACCEPTED);
     }
+
+    public function editarInstitucion(Request $request){
+
+        $registro =  Institucion::find($request->input('id'));
+
+        $id_institucion = $registro->id;
+        if (!$id_institucion) {
+            throw new \Exception('Error al obtener el ID de la institución.');
+        }
+
+        $actividad_institucion = Actividad_institucion::where('institucion_id', $id_institucion)->get();
+
+        
+    }
 }

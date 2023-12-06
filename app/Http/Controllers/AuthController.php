@@ -18,7 +18,7 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        $user = User::create([
+        return User::create([
             'name' => $request->input('name'),
             'apellido' => $request->input('apellido'),
             'email' => $request->input('email'),
@@ -26,13 +26,17 @@ class AuthController extends Controller
             'cargo_institucional' => $request->input('cargo_institucional'),
             'password' => Hash::make($request->input('password'))
         ]);
-        $rol = strtoupper($request->input('cargo_institucional'));
-        $user->assignRole($rol);
-        return response()->json(["message" => "User Created"]);
+
+        $user->assignRole($request->input('cargo_institucional'));
+
+        $token = $user->createToken('auth_token')->accessToken;
+        return response([
+            'token'=>$token,
+            'role'=>$user->getRoleNames()
+        ]);   
     }
 
-    public function login(Request $request)
-    {
+    public function login(Request $request){
         if (!Auth::attempt($request->only('email', 'password'))) {
             return response([
                 'message' => 'Invalid credentials'
@@ -40,20 +44,22 @@ class AuthController extends Controller
         }
         $user = Auth::user();
 
-        $token = $user->createToken('token')->plainTextToken;
+        // $token = $user->createToken('token')->plainTextToken;
+        $token = $user->createToken('auth_token')->accessToken;
 
         $cookie = cookie('jwt', $token, 60 * 24);
 
         return response([
             'message' => 'Success',
             'token' => $token,
-            'user' => $user->cargo_institucional
+            'user' => $user->cargo_institucional,
+            'roles' => $user->getRoleNames()
         ])->withCookie($cookie);
     }
 
-    public function logout()
-    {
+    public function logout(Request $request){
         $cookie = Cookie::forget('jwt');
+        $request->user()->token()->revoke();
 
         return response([
             'message' => 'Success'

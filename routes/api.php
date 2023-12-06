@@ -17,20 +17,31 @@ use App\Http\Controllers\RolesController;
 |
 */
 
-/*Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
-});*/
+});
 
 //Route::get('user',[AuthController::class, 'user']);
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware('auth:api')->group(function () {
     Route::get('user', [AuthController::class, 'user']);
     Route::post('logout', [AuthController::class, 'logout']);
 });
 
-Route::get('DataUsers', [AuthController::class, 'AllUsers']);
+// Route::middleware('auth:api')->group(function () {
+//     Route::post('register', [AuthController::class, 'register']);
+//     Route::get('sectores', [ReadDataController::class, 'obtenerSectores']);
+// });
+
+Route::middleware(['auth:api', 'role:Administrador'])->group(function () {
+    // Rutas solo accesibles por usuarios administradores
+    Route::get('sectores', [ReadDataController::class, 'obtenerSectores']);
+    Route::get('DataUsers', [AuthController::class, 'AllUsers']);
+
+});
+// Route::get('DataUsers', [AuthController::class, 'AllUsers']);
 
 Route::post('readData', [ReadDataController::class, 'readData']);
 Route::get('AllData', [ReadDataController::class, 'AllData']);
@@ -41,7 +52,7 @@ Route::get('DataInstitucionesId/{id}', [ReadDataController::class, 'DataInstituc
 Route::get('DataInstitucionesDirecciones', [ReadDataController::class, 'DataInstitucionesDirecciones']);
 
 Route::get('caracterizacion', [ReadDataController::class, 'obtenerCaracterizaciones']);
-Route::get('sectores', [ReadDataController::class, 'obtenerSectores']);
+// Route::get('sectores', [ReadDataController::class, 'obtenerSectores']);
 Route::get('actividades', [ReadDataController::class, 'obtenerActividades']);
 
 Route::post('ingresarInstitucion', [ReadDataController::class, 'registrarInstitucion']);
