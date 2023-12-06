@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ReadDataController;
+use App\Http\Controllers\RolesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,12 +36,14 @@ Route::post('readData', [ReadDataController::class, 'readData']);
 Route::get('AllData', [ReadDataController::class, 'AllData']);
 Route::get('AllInstituciones', [ReadDataController::class, 'AllInstituciones']);
 
-Route::get('DataInstituciones',[ReadDataController::class, 'DataInstituciones']);
-Route::get('DataInstitucionesId/{id}',[ReadDataController::class, 'DataInstitucionesId']);
-Route::get('DataInstitucionesDirecciones',[ReadDataController::class, 'DataInstitucionesDirecciones']);
+Route::get('DataInstituciones', [ReadDataController::class, 'DataInstituciones']);
+Route::get('DataInstitucionesId/{id}', [ReadDataController::class, 'DataInstitucionesId']);
+Route::get('DataInstitucionesDirecciones', [ReadDataController::class, 'DataInstitucionesDirecciones']);
 
 Route::get('caracterizacion', [ReadDataController::class, 'obtenerCaracterizaciones']);
 Route::get('sectores', [ReadDataController::class, 'obtenerSectores']);
 Route::get('actividades', [ReadDataController::class, 'obtenerActividades']);
 
 Route::post('ingresarInstitucion', [ReadDataController::class, 'registrarInstitucion']);
+
+Route::get("roles", [RolesController::class, 'index']);
