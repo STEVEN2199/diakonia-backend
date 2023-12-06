@@ -37,6 +37,18 @@ class ReadDataController extends Controller
             ]);
             $data = $request->input('data');
             foreach ($data as $row) {
+
+                $caracterizacion = Caracterizacion::updateOrCreate(['nombre_caracterizacion' => ucwords($row["caracterización"])]);
+
+
+                $actividad = Actividad::updateOrCreate([
+                    "nombre_actividad" => trim($row["actividad"]),
+                ]);
+
+                $sectorizacion = Sectorizacion::updateOrCreate([
+                    "nombre_sectorizacion" => trim($row["sectorización"]),
+                ]);
+
                 $institucion = Institucion::updateOrCreate(
                     [
                         'nombre' => trim($row['nombre_de_las_instituciones']),
@@ -45,6 +57,9 @@ class ReadDataController extends Controller
                         'numero_beneficiarios' => intval($row['número_de_beneficiarios'])
                     ],
                 );
+                $institucion->caracterizaciones()->attach($caracterizacion->id);
+                $institucion->actividades()->attach($actividad->id);
+                $institucion->sectorizaciones()->attach($sectorizacion->id);
 
                 if (isset($row['dirección'])) {
                     $coords = explode(",", $row["latitud_y_longitud"]);
@@ -80,21 +95,7 @@ class ReadDataController extends Controller
                     ]);
                 }
 
-                if (isset($row['caracterización'])) {
-                    Caracterizacion::updateOrCreate(['nombre_caracterizacion' => ucwords($row["caracterización"])]);
-                }
 
-                if (isset($row['actividad'])) {
-                    Actividad::updateOrCreate([
-                        "nombre_actividad" => trim($row["actividad"]),
-                    ]);
-                }
-
-                if (isset($row['sectorización'])) {
-                    Sectorizacion::updateOrCreate([
-                        "nombre_sectorizacion" => trim($row["sectorización"]),
-                    ]);
-                }
 
                 if (isset($row['contacto'])) {
                     $contacto_data = explode(" ", $row["contacto"], strlen($row["contacto"]) ? 2 : 1);
@@ -379,16 +380,18 @@ class ReadDataController extends Controller
         return $sectores->toArray();
     }
 
-    public function obtenerActividades(){
+    public function obtenerActividades()
+    {
         $actividades = DB::table('actividad')->get();
         return $actividades->toArray();
     }
 
-    public function registrarInstitucion(Request $request){
+    public function registrarInstitucion(Request $request)
+    {
 
         // try{
 
-        
+
 
         // }catch (\Exception $e) {
         //     info($e);
@@ -468,7 +471,7 @@ class ReadDataController extends Controller
         $direccion = Direccion::create([
             'direccion_nombre' => $request->input('direccion'),
             'url_direccion' => $request->input('url_direccion'),
-            'latitud'=> $request->input('latitud'),
+            'latitud' => $request->input('latitud'),
             'longitud' => $request->input('longitud'),
             'institucion_id' => $id_institucion,
         ]);
@@ -497,9 +500,8 @@ class ReadDataController extends Controller
             $tipo_poblacion = Tipo_poblacion::create([
                 'tipo_poblacion' => $lista_tipo_poblacion[$i],
                 'institucion_id' => $id_institucion
-    
-            ]);
 
+            ]);
         }
 
         // $tipo_poblacion = Tipo_poblacion::create([
@@ -507,11 +509,11 @@ class ReadDataController extends Controller
         //     'institucion_id' => $id_institucion
 
         // ]);
-        
+
         return response([
             'message' => 'OK',
             'institucion' => $institucion,
-            'caracterizacion_institucion'=>$institucion
+            'caracterizacion_institucion' => $institucion
 
         ], Response::HTTP_ACCEPTED);
     }

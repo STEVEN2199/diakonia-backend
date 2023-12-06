@@ -18,7 +18,7 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        return User::create([
+        $user = User::create([
             'name' => $request->input('name'),
             'apellido' => $request->input('apellido'),
             'email' => $request->input('email'),
@@ -26,6 +26,9 @@ class AuthController extends Controller
             'cargo_institucional' => $request->input('cargo_institucional'),
             'password' => Hash::make($request->input('password'))
         ]);
+        $rol = strtoupper($request->input('cargo_institucional'));
+        $user->assignRole($rol);
+        return response()->json(["message" => "User Created"]);
     }
 
     public function login(Request $request)
@@ -39,28 +42,26 @@ class AuthController extends Controller
 
         $token = $user->createToken('token')->plainTextToken;
 
-        $cookie = cookie('jwt', $token, 60*24);
+        $cookie = cookie('jwt', $token, 60 * 24);
 
         return response([
-            'message' =>'Success',
+            'message' => 'Success',
             'token' => $token,
             'user' => $user->cargo_institucional
         ])->withCookie($cookie);
     }
 
-    public function logout(){
+    public function logout()
+    {
         $cookie = Cookie::forget('jwt');
 
         return response([
-            'message' =>'Success'
+            'message' => 'Success'
         ])->withCookie($cookie);
     }
 
     public function AllUsers()
     {
         return User::all();
-
     }
-
-
 }

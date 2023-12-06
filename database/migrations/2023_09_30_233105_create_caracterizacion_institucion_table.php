@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('caracterizacion_id');
             $table->unsignedBigInteger('institucion_id');
+            $table->foreign('caracterizacion_id')->references('id')->on('caracterizacion');
+            $table->foreign('institucion_id')->references('id')->on('institucion');
             $table->timestamps();
         });
     }
