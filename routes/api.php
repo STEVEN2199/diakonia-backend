@@ -25,25 +25,29 @@ use App\Http\Controllers\RolesController;
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(["auth:sanctum", 'role:Administrator'])->group(function () {
     Route::get('user', [AuthController::class, 'user']);
     Route::post('logout', [AuthController::class, 'logout']);
+    Route::get('caracterizacion', [ReadDataController::class, 'obtenerCaracterizaciones']);
+    Route::get('sectores', [ReadDataController::class, 'obtenerSectores']);
+    Route::get('actividades', [ReadDataController::class, 'obtenerActividades']);
+    Route::get('DataUsers', [AuthController::class, 'AllUsers']);
 });
 
-Route::get('DataUsers', [AuthController::class, 'AllUsers']);
-
-Route::post('readData', [ReadDataController::class, 'readData']);
-Route::get('AllData', [ReadDataController::class, 'AllData']);
-Route::get('AllInstituciones', [ReadDataController::class, 'AllInstituciones']);
-
-Route::get('DataInstituciones', [ReadDataController::class, 'DataInstituciones']);
-Route::get('DataInstitucionesId/{id}', [ReadDataController::class, 'DataInstitucionesId']);
-Route::get('DataInstitucionesDirecciones', [ReadDataController::class, 'DataInstitucionesDirecciones']);
-
-Route::get('caracterizacion', [ReadDataController::class, 'obtenerCaracterizaciones']);
-Route::get('sectores', [ReadDataController::class, 'obtenerSectores']);
-Route::get('actividades', [ReadDataController::class, 'obtenerActividades']);
-
-Route::post('ingresarInstitucion', [ReadDataController::class, 'registrarInstitucion']);
-
 Route::get("roles", [RolesController::class, 'index']);
+
+Route::group(["middleware" => ["auth:sanctum", "role:Administrator|Usuario General"]], function () {
+    Route::post('ingresarInstitucion', [ReadDataController::class, 'registrarInstitucion']);
+});
+
+Route::group(["middleware" => ["auth:sanctum", "role:Administrator|Usuario Invitado"]], function () {
+    Route::get('DataInstituciones', [ReadDataController::class, 'DataInstituciones']);
+    Route::get('DataInstitucionesId/{id}', [ReadDataController::class, 'DataInstitucionesId']);
+    Route::get('DataInstitucionesDirecciones', [ReadDataController::class, 'DataInstitucionesDirecciones']);
+});
+
+Route::group(["middleware" => ["auth:sanctum", "role:Administrator|Usuario General|Usuario Invitado"]], function () {
+    Route::post('readData', [ReadDataController::class, 'readData']);
+    Route::get('AllData', [ReadDataController::class, 'AllData']);
+    Route::get('AllInstituciones', [ReadDataController::class, 'AllInstituciones']);
+});
