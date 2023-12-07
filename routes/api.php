@@ -24,10 +24,9 @@ use App\Http\Controllers\RolesController;
 //Route::get('user',[AuthController::class, 'user']);
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
+Route::post('logout', [AuthController::class, 'logout']);
 
 Route::middleware(["auth:sanctum", 'role:Administrator'])->group(function () {
-    Route::get('user', [AuthController::class, 'user']);
-    Route::post('logout', [AuthController::class, 'logout']);
     Route::get('caracterizacion', [ReadDataController::class, 'obtenerCaracterizaciones']);
     Route::get('sectores', [ReadDataController::class, 'obtenerSectores']);
     Route::get('actividades', [ReadDataController::class, 'obtenerActividades']);
@@ -47,6 +46,7 @@ Route::group(["middleware" => ["auth:sanctum", "role:Administrator|Usuario Invit
 });
 
 Route::group(["middleware" => ["auth:sanctum", "role:Administrator|Usuario General|Usuario Invitado"]], function () {
+    Route::get('user', [AuthController::class, 'user']);
     Route::post('readData', [ReadDataController::class, 'readData']);
     Route::get('AllData', [ReadDataController::class, 'AllData']);
     Route::get('AllInstituciones', [ReadDataController::class, 'AllInstituciones']);
