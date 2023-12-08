@@ -26,7 +26,7 @@ Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
 Route::post('logout', [AuthController::class, 'logout']);
 
-Route::middleware(["auth:sanctum", 'role:Administrator'])->group(function () {
+Route::middleware(["auth:sanctum", 'role:Administrador'])->group(function () {
     Route::get('caracterizacion', [ReadDataController::class, 'obtenerCaracterizaciones']);
     Route::get('sectores', [ReadDataController::class, 'obtenerSectores']);
     Route::get('actividades', [ReadDataController::class, 'obtenerActividades']);
@@ -35,17 +35,17 @@ Route::middleware(["auth:sanctum", 'role:Administrator'])->group(function () {
 
 Route::get("roles", [RolesController::class, 'index']);
 
-Route::group(["middleware" => ["auth:sanctum", "role:Administrator|Usuario General"]], function () {
+Route::group(["middleware" => ["auth:sanctum", "role:Administrador|Usuario General"]], function () {
     Route::post('ingresarInstitucion', [ReadDataController::class, 'registrarInstitucion']);
 });
 
-Route::group(["middleware" => ["auth:sanctum", "role:Administrator|Usuario Invitado"]], function () {
+Route::group(["middleware" => ["auth:sanctum", "role:Administrador|Usuario Invitado"]], function () {
     Route::get('DataInstituciones', [ReadDataController::class, 'DataInstituciones']);
     Route::get('DataInstitucionesId/{id}', [ReadDataController::class, 'DataInstitucionesId']);
     Route::get('DataInstitucionesDirecciones', [ReadDataController::class, 'DataInstitucionesDirecciones']);
 });
 
-Route::group(["middleware" => ["auth:sanctum", "role:Administrator|Usuario General|Usuario Invitado"]], function () {
+Route::group(["middleware" => ["auth:sanctum", "role:Administrador|Usuario General|Usuario Invitado"]], function () {
     Route::get('user', [AuthController::class, 'user']);
     Route::post('readData', [ReadDataController::class, 'readData']);
     Route::get('AllData', [ReadDataController::class, 'AllData']);
