@@ -38,15 +38,15 @@ class ReadDataController extends Controller
             $data = $request->input('data');
             foreach ($data as $row) {
 
-                $caracterizacion = Caracterizacion::updateOrCreate(['nombre_caracterizacion' => ucwords($row["caracterización"])]);
+                $caracterizacion = Caracterizacion::updateOrCreate(['nombre_caracterizacion' => ucwords(strtolower($row["caracterización"]))]);
 
 
                 $actividad = Actividad::updateOrCreate([
-                    "nombre_actividad" => trim($row["actividad"]),
+                    "nombre_actividad" => ucwords(strtolower(trim($row["actividad"]))),
                 ]);
 
                 $sectorizacion = Sectorizacion::updateOrCreate([
-                    "nombre_sectorizacion" => trim($row["sectorización"]),
+                    "nombre_sectorizacion" => ucwords(strtolower(trim($row["sectorización"]))),
                 ]);
 
                 $institucion = Institucion::updateOrCreate(

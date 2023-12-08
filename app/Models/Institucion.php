@@ -13,17 +13,17 @@ class Institucion extends Model
 
     public function caracterizaciones()
     {
-        return $this->belongsToMany(Caracterizacion::class, 'caracterizacion__institucion', 'institucion_id', 'caracterizacion_id');
+        return $this->belongsToMany(Caracterizacion::class, 'caracterizacion_institucion', 'institucion_id', 'caracterizacion_id');
     }
 
     public function actividades()
     {
-        return $this->belongsToMany(Actividad::class, 'actividad__institucion', 'institucion_id', 'actividad_id');
+        return $this->belongsToMany(Actividad::class, 'actividad_institucion', 'institucion_id', 'actividad_id');
     }
 
     public function sectorizaciones()
     {
-        return $this->belongsToMany(Sectorizacion::class, 'sectorizacion__institucion', 'institucion_id', 'sector_id');
+        return $this->belongsToMany(Sectorizacion::class, 'sectorizacion_institucion', 'institucion_id', 'sector_id');
     }
 
     public function tipo_poblacion()

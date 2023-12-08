@@ -13,7 +13,7 @@ class Sectorizacion extends Model
 
     public function instituciones()
     {
-        return $this->belongsToMany(Institucion::class, 'sectorizacion__institucion', 'sector_id', 'institucion_id');
+        return $this->belongsToMany(Institucion::class, 'sectorizacion_institucion', 'sector_id', 'institucion_id');
     }
 
 }

@@ -9,11 +9,10 @@ class Actividad extends Model
 {
     use HasFactory;
     protected $table = 'actividad';
-    protected $fillable=['nombre_actividad'];
+    protected $fillable = ['nombre_actividad'];
 
     public function instituciones()
     {
-        return $this->belongsToMany(Institucion::class, 'actividad__institucion', 'actividad_id', 'institucion_id');
+        return $this->belongsToMany(Institucion::class, 'actividad_institucion', 'actividad_id', 'institucion_id');
     }
-
 }
