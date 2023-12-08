@@ -39,15 +39,15 @@ Route::group(["middleware" => ["auth:sanctum", "role:Administrador|Usuario Gener
     Route::post('ingresarInstitucion', [ReadDataController::class, 'registrarInstitucion']);
 });
 
-Route::group(["middleware" => ["auth:sanctum", "role:Administrador|Usuario Invitado"]], function () {
-    Route::get('DataInstituciones', [ReadDataController::class, 'DataInstituciones']);
-    Route::get('DataInstitucionesId/{id}', [ReadDataController::class, 'DataInstitucionesId']);
-    Route::get('DataInstitucionesDirecciones', [ReadDataController::class, 'DataInstitucionesDirecciones']);
-});
+// Route::group(["middleware" => ["auth:sanctum", "role:Administrador|Usuario Invitado"]], function () {
+// });
 
 Route::group(["middleware" => ["auth:sanctum", "role:Administrador|Usuario General|Usuario Invitado"]], function () {
     Route::get('user', [AuthController::class, 'user']);
     Route::post('readData', [ReadDataController::class, 'readData']);
     Route::get('AllData', [ReadDataController::class, 'AllData']);
     Route::get('AllInstituciones', [ReadDataController::class, 'AllInstituciones']);
+    Route::get('DataInstituciones', [ReadDataController::class, 'DataInstituciones']);
+    Route::get('DataInstitucionesId/{id}', [ReadDataController::class, 'DataInstitucionesId']);
+    Route::get('DataInstitucionesDirecciones', [ReadDataController::class, 'DataInstitucionesDirecciones']);
 });
