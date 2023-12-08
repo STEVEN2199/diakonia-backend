@@ -9,6 +9,13 @@ class Contacto extends Model
 {
     use HasFactory;
     protected $table = 'contacto';
-    protected $fillable=['nombre','apellido','institucion_id'];
+    protected $fillable = ['nombre', 'apellido', 'institucion_id'];
 
+    public function contacto_correo() {
+        return $this->hasMany(Contacto_correo::class);
+    }
+
+    public function contacto_telefono() {
+        return $this->hasMany(Contacto_telefono::class);
+    }
 }

@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\InstitucionesController;
 use App\Http\Controllers\ReadDataController;
 use App\Http\Controllers\RolesController;
 use App\Http\Controllers\UsersController;
@@ -40,6 +41,9 @@ Route::get("roles", [RolesController::class, 'index']);
 
 Route::group(["middleware" => ["auth:sanctum", "role:Administrador|Usuario General"]], function () {
     Route::post('ingresarInstitucion', [ReadDataController::class, 'registrarInstitucion']);
+    Route::get("disableInstitucion/{id}", [InstitucionesController::class, 'disableInstitucion']);
+    Route::put("editInstitucion/{id}", [InstitucionesController::class, 'editInstitucion']);
+    Route::get("filter", [InstitucionesController::class, 'filterInstitucion']);
 });
 
 // Route::group(["middleware" => ["auth:sanctum", "role:Administrador|Usuario Invitado"]], function () {
