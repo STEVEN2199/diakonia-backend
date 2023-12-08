@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ReadDataController;
 use App\Http\Controllers\RolesController;
+use App\Http\Controllers\UsersController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +32,8 @@ Route::middleware(["auth:sanctum", 'role:Administrador'])->group(function () {
     Route::get('sectores', [ReadDataController::class, 'obtenerSectores']);
     Route::get('actividades', [ReadDataController::class, 'obtenerActividades']);
     Route::get('DataUsers', [AuthController::class, 'AllUsers']);
+    Route::put("/users/{id}", [UsersController::class, 'edit']);
+    Route::delete("/users/{id}", [UsersController::class, 'destroy']);
 });
 
 Route::get("roles", [RolesController::class, 'index']);

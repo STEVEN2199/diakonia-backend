@@ -30,4 +30,9 @@ class Institucion extends Model
     {
         return $this->hasMany(Tipo_poblacion::class);
     }
+
+    public function estado()
+    {
+        return $this->hasMany(Estado::class);
+    }
 }
