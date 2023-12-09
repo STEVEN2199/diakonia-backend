@@ -11,9 +11,8 @@ use Illuminate\Support\Facades\DB;
 
 class InstitucionesController extends Controller
 {
-    public function disableInstitucion($id)
+    public function disableInstitucion(Estado $institucionEstado)
     {
-        $institucionEstado = Estado::where('nombre_estado', '=', $id);
         $institucionEstado->nombre_estado = 'PASIVA';
         $institucionEstado->save();
         return response()->json(["message" => "Estado de la institucion actualizada"], 200);
@@ -21,6 +20,9 @@ class InstitucionesController extends Controller
 
     public function editInstitucion(Request $request, $id)
     {
+        $request->validate([
+            ''
+        ]);
         $user = Auth::user();
         $institucion = Institucion::find($id);
         if (!$institucion) {
@@ -54,18 +56,20 @@ class InstitucionesController extends Controller
         }
 
         if ($tipoPoblacion == null & $actividad) {
-            $instituciones = Institucion::with('actividad')->where('actividad_id', "=", $actividad);
+            $instituciones = Institucion::with('actividad')->where('actividad.nombre_actividad', "=", $actividad);
             return response()->json(["instituciones" => $instituciones], 200);
         }
 
         if ($actividad == null & $tipoPoblacion) {
-            $instituciones = Institucion::with('tipo_poblacion')->where('tipo_poblacion', "=", $tipoPoblacion);
+            $instituciones = Institucion::with('tipo_poblacion')->where('tipo_poblacion.tipo_poblacion', "=", $tipoPoblacion);
             return response()->json(["instituciones" => $instituciones], 200);
         }
 
-        //Falta Hacer JOins
-        $institucion = DB::table('institucion');
+        $instituciones = Institucion::with(['actividad', 'tipo_poblacion'])->where([
+            ['actividad.nombre_actividad', '=', $actividad],
+            ['tipo_poblacion.tipo_poblacion', '=', $tipoPoblacion]
+        ])->get();
 
-        return response('NOT_IMPLEMENTED', 200);
+        return response()->json(["instituciones" => $instituciones, "total" => count($instituciones)]);
     }
 }

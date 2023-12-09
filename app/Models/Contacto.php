@@ -11,11 +11,13 @@ class Contacto extends Model
     protected $table = 'contacto';
     protected $fillable = ['nombre', 'apellido', 'institucion_id'];
 
-    public function contacto_correo() {
-        return $this->hasMany(Contacto_correo::class);
+    public function contacto_correo()
+    {
+        return $this->belongsTo(Contacto_correo::class);
     }
 
-    public function contacto_telefono() {
-        return $this->hasMany(Contacto_telefono::class);
+    public function contacto_telefono()
+    {
+        return $this->belongsTo(Contacto_telefono::class);
     }
 }

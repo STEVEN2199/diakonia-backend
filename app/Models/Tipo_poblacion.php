@@ -11,7 +11,7 @@ class Tipo_poblacion extends Model
     protected $fillable = ['tipo_poblacion', 'institucion_id'];
     protected $table =  'tipo_poblacion';
 
-    public function institucion()
+    public function instituciones()
     {
         return $this->belongsTo(Institucion::class, 'institucion_id', 'id');
     }
