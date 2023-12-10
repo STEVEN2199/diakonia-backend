@@ -10,7 +10,8 @@ class Institucion extends Model
     use HasFactory;
     protected $table = 'institucion';
     protected $fillable = ['nombre', 'representante_legal', 'ruc', 'numero_beneficiarios'];
-
+    protected $hidden = ['created_at', 'updated_at'];
+    
     public function caracterizaciones()
     {
         return $this->belongsToMany(Caracterizacion::class, 'caracterizacion_institucion', 'institucion_id', 'caracterizacion_id');

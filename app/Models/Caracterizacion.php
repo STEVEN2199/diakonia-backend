@@ -10,6 +10,7 @@ class Caracterizacion extends Model
     use HasFactory;
     protected $table = 'caracterizacion';
     protected $fillable = ['nombre_caracterizacion'];
+    protected $hidden = ['created_at', 'updated_at'];
 
     public function instituciones()
     {

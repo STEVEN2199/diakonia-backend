@@ -50,19 +50,25 @@ class InstitucionesController extends Controller
         }
 
         if (is_null($tipoPoblacion) && $actividad) {
-            $instituciones = Institucion::with('actividades')->where('actividad.nombre_actividad', "=", $actividad);
-            return response()->json(["instituciones" => $instituciones], 200);
+            $instituciones = Institucion::with(['actividades'])->whereHas('actividades', function ($q) use ($actividad) {
+                $q->where("actividad.nombre_actividad", "=", $actividad);
+            })->get();
+            return response()->json(["instituciones" => $instituciones, "total" => count($instituciones)], 200);
         }
 
         if (is_null($actividad) && $tipoPoblacion) {
-            $instituciones = Institucion::with('tipo_poblacion')->where('tipo_poblacion.tipo_poblacion', "=", $tipoPoblacion);
-            return response()->json(["instituciones" => $instituciones], 200);
+            $instituciones = Institucion::with('tipo_poblacion')->whereHas('tipo_poblacion', function ($q) use ($tipoPoblacion) {
+                $q->where("tipo_poblacion.tipo_poblacion", "=", $tipoPoblacion);
+            })->get();
+            return response()->json(["instituciones" => $instituciones, "total" => count($instituciones)], 200);
         }
 
-        $instituciones = Institucion::with(['actividades', 'tipo_poblacion'])->where([
-            ['actividad.nombre_actividad', '=', $actividad],
-            ['tipo_poblacion.tipo_poblacion', '=', $tipoPoblacion]
-        ])->get();
+        $instituciones = Institucion::with(['actividades', 'tipo_poblacion'])
+            ->whereHas('actividades', function ($q) use ($actividad) {
+                $q->where("actividad.nombre_actividad", "=", $actividad);
+            })->whereHas('tipo_poblacion', function ($q) use ($tipoPoblacion) {
+                $q->where("tipo_poblacion.tipo_poblacion", "=", $tipoPoblacion);
+            })->get();
 
         return response()->json(["instituciones" => $instituciones, "total" => count($instituciones)]);
     }
