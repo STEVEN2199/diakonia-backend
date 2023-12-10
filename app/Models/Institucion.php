@@ -35,4 +35,9 @@ class Institucion extends Model
     {
         return $this->hasMany(Estado::class);
     }
+
+    public function contacto()
+    {
+        return $this->belongsTo(Contacto::class);
+    }
 }

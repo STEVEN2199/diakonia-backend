@@ -10,18 +10,14 @@ use Illuminate\Support\Facades\Auth;
 
 class InstitucionesController extends Controller
 {
-    public function disableInstitucion(Estado $institucionEstado)
+    public function disableInstitucion(Institucion $institucion)
     {
-        $institucionEstado->nombre_estado = 'PASIVA';
-        $institucionEstado->save();
+        $institucion->estado()->update(["nombre_estado" => "PASIVA"]);
         return response()->json(["message" => "Estado de la institucion actualizada"], 200);
     }
 
     public function editInstitucion(Request $request, $id)
     {
-        $request->validate([
-            ''
-        ]);
         $user = Auth::user();
         $institucion = Institucion::find($id);
         if (!$institucion) {
@@ -34,16 +30,15 @@ class InstitucionesController extends Controller
             $institucion->numero_beneficiarios = $request->input('numero_beneficiarios');
             $institucion->save();
         }
+        // $contacto = Contacto::find($institucion->id);
+        // $contacto->nombre = $request->input("nombre");
+        // $contacto->apellido = $request->input("apellido");
+        // $contacto->save();
+        $institucion->contacto()->update(["nombre" => $request->input("nombre"), "apellido" => $request->input("apellido")]);
         $contacto = Contacto::find($institucion->id);
-        $contacto->nombre = $request->input("nombre");
-        $contacto->nombre = $request->input("apellido");
-        $contacto->save();
-        $contacto_correo = $contacto->contacto_correo();
-        $contacto_correo->correo_contacto = $request->input("correo_contacto");
-        $contacto_correo->save();
-        $contacto_telefono = $contacto->contacto_telefono();
-        $contacto_telefono->telefono_contacto = $request->input("telefono_contacto");
-        $contacto_telefono->save();
+        $contacto->contacto_correo()->update(["correo_contacto" => $request->input("correo_contacto")]);
+        $contacto->contacto_telefono()->update(["contacto_telefono" => $request->input("contacto_telefono")]);
+        return response()->json(["message" => "Informacion Institucion Actualizada"]);
     }
 
     public function filterInstitucion(Request $request)
@@ -64,7 +59,7 @@ class InstitucionesController extends Controller
             return response()->json(["instituciones" => $instituciones], 200);
         }
 
-        $instituciones = Institucion::with(['actividad', 'tipo_poblacion'])->where([
+        $instituciones = Institucion::with(['actividades', 'tipo_poblacion'])->where([
             ['actividad.nombre_actividad', '=', $actividad],
             ['tipo_poblacion.tipo_poblacion', '=', $tipoPoblacion]
         ])->get();

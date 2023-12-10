@@ -95,19 +95,16 @@ class ReadDataController extends Controller
                     ]);
                 }
 
-
-
                 if (isset($row['contacto'])) {
                     $contacto_data = explode(" ", $row["contacto"], strlen($row["contacto"]) ? 2 : 1);
                     $contacto = Contacto::updateOrCreate([
                         'nombre' => ucwords($contacto_data[0]),
                         'apellido' => ucwords($contacto_data[1]),
                         "institucion_id" => $institucion->id,
-                        // Agrega aquí el resto de los campos del contacto
                     ]);
-                    Contacto_correo::updateOrCreate(["correo_contacto" => $row["teléfono"], "contacto_id" => $contacto->id]);
+                    Contacto_correo::updateOrCreate(["correo_contacto" => $row["correos"], "contacto_id" => $contacto->id]);
 
-                    Contacto_telefono::updateOrCreate(["telefono_contacto" => trim($row["correos"] ?? "no tiene"), "contacto_id" => $contacto->id]);
+                    Contacto_telefono::updateOrCreate(["telefono_contacto" => trim($row["teléfono"] ?? "no tiene"), "contacto_id" => $contacto->id]);
                 }
             }
             return response()->json(['success' => true]);
