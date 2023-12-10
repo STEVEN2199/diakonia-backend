@@ -7,7 +7,6 @@ use App\Models\Estado;
 use App\Models\Institucion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class InstitucionesController extends Controller
 {
@@ -50,17 +49,17 @@ class InstitucionesController extends Controller
     public function filterInstitucion(Request $request)
     {
         $tipoPoblacion = $request->query('tipo_poblacion');
-        $actividad = $request->query('actividad');
-        if ($tipoPoblacion == null && $actividad == null) {
-            return response('Bad Requests', 400);
+        $actividad = $request->query('nombre_actividad');
+        if (is_null($tipoPoblacion) && is_null($actividad)) {
+            return response('Bad Request', 400);
         }
 
-        if ($tipoPoblacion == null & $actividad) {
-            $instituciones = Institucion::with('actividad')->where('actividad.nombre_actividad', "=", $actividad);
+        if (is_null($tipoPoblacion) && $actividad) {
+            $instituciones = Institucion::with('actividades')->where('actividad.nombre_actividad', "=", $actividad);
             return response()->json(["instituciones" => $instituciones], 200);
         }
 
-        if ($actividad == null & $tipoPoblacion) {
+        if (is_null($actividad) && $tipoPoblacion) {
             $instituciones = Institucion::with('tipo_poblacion')->where('tipo_poblacion.tipo_poblacion', "=", $tipoPoblacion);
             return response()->json(["instituciones" => $instituciones], 200);
         }
