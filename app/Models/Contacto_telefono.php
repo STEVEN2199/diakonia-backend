@@ -10,4 +10,9 @@ class Contacto_telefono extends Model
     use HasFactory;
     protected $table = 'contacto_telefono';
     protected $fillable = ['telefono_contacto', 'contacto_id'];
+
+    public function contacto()
+    {
+        return $this->belongsTo(Contacto::class);
+    }
 }

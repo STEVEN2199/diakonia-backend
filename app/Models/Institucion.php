@@ -11,7 +11,7 @@ class Institucion extends Model
     protected $table = 'institucion';
     protected $fillable = ['nombre', 'representante_legal', 'ruc', 'numero_beneficiarios'];
     protected $hidden = ['created_at', 'updated_at'];
-    
+
     public function caracterizaciones()
     {
         return $this->belongsToMany(Caracterizacion::class, 'caracterizacion_institucion', 'institucion_id', 'caracterizacion_id');
@@ -29,16 +29,16 @@ class Institucion extends Model
 
     public function tipo_poblacion()
     {
-        return $this->hasMany(Tipo_poblacion::class);
+        return $this->hasMany(Tipo_poblacion::class, "institucion_id", "id");
     }
 
     public function estado()
     {
-        return $this->hasMany(Estado::class);
+        return $this->hasMany(Estado::class, "institucion_id", "id");
     }
 
     public function contacto()
     {
-        return $this->belongsTo(Contacto::class);
+        return $this->hasMany(Contacto::class, "institucion_id", "id");
     }
 }

@@ -13,11 +13,16 @@ class Contacto extends Model
 
     public function contacto_correo()
     {
-        return $this->belongsTo(Contacto_correo::class);
+        return $this->hasMany(Contacto_correo::class);
     }
 
     public function contacto_telefono()
     {
-        return $this->belongsTo(Contacto_telefono::class);
+        return $this->hasMany(Contacto_telefono::class);
+    }
+
+    public function institucion()
+    {
+        return $this->belongsTo(Institucion::class, "id", "institucion_id");
     }
 }

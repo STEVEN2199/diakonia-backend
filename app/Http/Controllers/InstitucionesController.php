@@ -27,13 +27,8 @@ class InstitucionesController extends Controller
             $institucion->update($request->all());
             return response()->json(["message" => "Informacion Actualizada"]);
         } else {
-            $institucion->numero_beneficiarios = $request->input('numero_beneficiarios');
-            $institucion->save();
+            $institucion->update(["numero_beneficiarios" => $request->input('numero_beneficiarios')]);
         }
-        // $contacto = Contacto::find($institucion->id);
-        // $contacto->nombre = $request->input("nombre");
-        // $contacto->apellido = $request->input("apellido");
-        // $contacto->save();
         $institucion->contacto()->update(["nombre" => $request->input("nombre"), "apellido" => $request->input("apellido")]);
         $contacto = Contacto::find($institucion->id);
         $contacto->contacto_correo()->update(["correo_contacto" => $request->input("correo_contacto")]);
