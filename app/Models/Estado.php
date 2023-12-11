@@ -9,6 +9,6 @@ class Estado extends Model
 {
     use HasFactory;
     protected $table = 'estado';
-    protected $fillable=['nombre_estado','institucion_id'];
-
+    protected $fillable = ['nombre_estado', 'institucion_id'];
+    protected $hidden = ['created_at', 'updated_at'];
 }

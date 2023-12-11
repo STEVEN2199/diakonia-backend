@@ -10,5 +10,5 @@ class Red_bda extends Model
     use HasFactory;
     protected $table = "red_bda";
     protected $fillable = ['mes_ingreso', 'anio_ingreso', 'institucion_id'];
-    protected $hidden = ['created_at', 'updated_at'];
+    protected $hidden = ['institucion_id', 'created_at', 'updated_at'];
 }

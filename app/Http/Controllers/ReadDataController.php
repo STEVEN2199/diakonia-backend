@@ -514,4 +514,10 @@ class ReadDataController extends Controller
 
         ], Response::HTTP_ACCEPTED);
     }
+
+    public function obtenerTiposPoblacion(Request $request)
+    {
+        $tiposPoblacion = Tipo_poblacion::all();
+        return response()->json(["tiposPoblacion" => $tiposPoblacion], 200);
+    }
 }

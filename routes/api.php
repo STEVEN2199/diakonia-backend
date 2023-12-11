@@ -31,7 +31,6 @@ Route::post('logout', [AuthController::class, 'logout']);
 Route::middleware(["auth:sanctum", 'role:Administrador'])->group(function () {
     Route::get('caracterizacion', [ReadDataController::class, 'obtenerCaracterizaciones']);
     Route::get('sectores', [ReadDataController::class, 'obtenerSectores']);
-    Route::get('actividades', [ReadDataController::class, 'obtenerActividades']);
     Route::get('DataUsers', [AuthController::class, 'AllUsers']);
     Route::put("/users/{id}", [UsersController::class, 'edit']);
     Route::delete("/users/{id}", [UsersController::class, 'destroy']);
@@ -44,6 +43,8 @@ Route::group(["middleware" => ["auth:sanctum", "role:Administrador|Usuario Gener
     Route::get("disableInstitucion/{id}", [InstitucionesController::class, 'disableInstitucion']);
     Route::put("editInstitucion/{id}", [InstitucionesController::class, 'editInstitucion']);
     Route::get("filter", [InstitucionesController::class, 'filterInstitucion']);
+    Route::get('actividades', [ReadDataController::class, 'obtenerActividades']);
+    Route::get('tiposPoblacion', [ReadDataController::class, 'obtenerTiposPoblacion']);
 });
 
 // Route::group(["middleware" => ["auth:sanctum", "role:Administrador|Usuario Invitado"]], function () {

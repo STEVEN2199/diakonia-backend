@@ -21,12 +21,14 @@ class UsersController extends Controller
             'password' => Hash::make($request->input('password'))
 
         ]);
+        $user->syncRoles($request->input("cargo_institucional"));
         return response()->json(["message" => "User Updated!"], 200);
     }
 
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        User::destroy($id);
-        return response()->json(["message" => "User Destroy"], 200);
+        $user->removeRole($user->cargo_institucional);
+        $user->delete();
+        return response()->json(["message" => "User Eliminado"], 200);
     }
 }
