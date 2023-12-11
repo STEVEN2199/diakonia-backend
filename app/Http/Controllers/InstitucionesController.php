@@ -45,20 +45,20 @@ class InstitucionesController extends Controller
         }
 
         if (is_null($tipoPoblacion) && $actividad) {
-            $instituciones = Institucion::with(['actividades', 'tipo_poblacion', 'red_dba', "clasificacion", "sectorizaciones", "contacto", "direccion", "estado", "caracterizaciones", "contacto.contacto_correo", "contacto.contacto_telefono"])->whereHas('actividades', function ($q) use ($actividad) {
+            $instituciones = Institucion::with(['actividades', 'tipo_poblacion', 'red_bda', "clasificacion", "sectorizaciones", "contacto", "direccion", "estado", "caracterizaciones", "contacto.contacto_correo", "contacto.contacto_telefono"])->whereHas('actividades', function ($q) use ($actividad) {
                 $q->where("actividad.nombre_actividad", "=", $actividad);
             })->get();
             return response()->json(["instituciones" => $instituciones, "total" => count($instituciones)], 200);
         }
 
         if (is_null($actividad) && $tipoPoblacion) {
-            $instituciones = Institucion::with(['actividades', 'tipo_poblacion', 'red_dba', "clasificacion", "sectorizaciones", "contacto", "direccion", "estado", "caracterizaciones", "contacto.contacto_correo", "contacto.contacto_telefono"])->whereHas('tipo_poblacion', function ($q) use ($tipoPoblacion) {
+            $instituciones = Institucion::with(['actividades', 'tipo_poblacion', 'red_bda', "clasificacion", "sectorizaciones", "contacto", "direccion", "estado", "caracterizaciones", "contacto.contacto_correo", "contacto.contacto_telefono"])->whereHas('tipo_poblacion', function ($q) use ($tipoPoblacion) {
                 $q->where("tipo_poblacion.tipo_poblacion", "=", $tipoPoblacion);
             })->get();
             return response()->json(["instituciones" => $instituciones, "total" => count($instituciones)], 200);
         }
 
-        $instituciones = Institucion::with(['actividades', 'tipo_poblacion', 'red_dba', "clasificacion", "sectorizaciones", "contacto", "direccion", "estado", "caracterizaciones", "contacto.contacto_correo", "contacto.contacto_telefono"])
+        $instituciones = Institucion::with(['actividades', 'tipo_poblacion', 'red_bda', "clasificacion", "sectorizaciones", "contacto", "direccion", "estado", "caracterizaciones", "contacto.contacto_correo", "contacto.contacto_telefono"])
             ->whereHas('actividades', function ($q) use ($actividad) {
                 $q->where("actividad.nombre_actividad", "=", $actividad);
             })->whereHas('tipo_poblacion', function ($q) use ($tipoPoblacion) {
