@@ -47,6 +47,11 @@ class Institucion extends Model
         return $this->hasMany(Red_bda::class, "institucion_id", "id");
     }
 
+    public function direccion()
+    {
+        return $this->hasMany(Direccion::class, "institucion_id", "id");
+    }
+
     public function clasificacion()
     {
         return $this->hasMany(Clasificacion::class, "institucion_id", "id");
