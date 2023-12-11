@@ -74,9 +74,16 @@ class ReadDataController extends Controller
                 }
 
                 if (isset($row['tipo_de_población'])) {
-                    error_log($row["tipo_de_población"]);
                     Tipo_poblacion::updateOrCreate([
                         "tipo_poblacion" => trim(ucwords($row["tipo_de_población"])),
+                        "institucion_id" => $institucion->id
+                    ]);
+                }
+
+                if (isset($row['clasificacion_'])) {
+                    Clasificacion::updateOrCreate([
+                        "nombre_clasificacion" => trim(ucwords($row["clasificacion_"])),
+                        "condicion" => false,
                         "institucion_id" => $institucion->id
                     ]);
                 }

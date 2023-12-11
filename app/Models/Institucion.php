@@ -41,4 +41,14 @@ class Institucion extends Model
     {
         return $this->hasMany(Contacto::class, "institucion_id", "id");
     }
+
+    public function red_dba()
+    {
+        return $this->hasMany(Red_bda::class, "institucion_id", "id");
+    }
+
+    public function clasificacion()
+    {
+        return $this->hasMany(Clasificacion::class, "institucion_id", "id");
+    }
 }

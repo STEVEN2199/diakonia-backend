@@ -11,4 +11,9 @@ class Red_bda extends Model
     protected $table = "red_bda";
     protected $fillable = ['mes_ingreso', 'anio_ingreso', 'institucion_id'];
     protected $hidden = ['institucion_id', 'created_at', 'updated_at'];
+
+    public function institucion()
+    {
+        return $this->belongsTo(Institucion::class, "id", "institucion_id");
+    }
 }

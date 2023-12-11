@@ -11,4 +11,9 @@ class Estado extends Model
     protected $table = 'estado';
     protected $fillable = ['nombre_estado', 'institucion_id'];
     protected $hidden = ['created_at', 'updated_at'];
+
+    public function institucion()
+    {
+        return $this->belongsTo(Institucion::class, "id", "institucion_id");
+    }
 }
