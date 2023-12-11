@@ -26,6 +26,7 @@ use App\Models\Sectorizacion;
 use PhpParser\Node\Stmt\TryCatch;
 
 use function Laravel\Prompts\info;
+use function Laravel\Prompts\table;
 
 class ReadDataController extends Controller
 {
@@ -517,7 +518,7 @@ class ReadDataController extends Controller
 
     public function obtenerTiposPoblacion(Request $request)
     {
-        $tiposPoblacion = Tipo_poblacion::all();
-        return response()->json(["tiposPoblacion" => $tiposPoblacion], 200);
+        $tiposPoblacion = DB::table('tipo_poblacion')->distinct('tipo_poblacion')->get()->toArray();
+        return response()->json($tiposPoblacion, 200);
     }
 }
