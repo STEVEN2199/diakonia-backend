@@ -7,6 +7,7 @@ use App\Http\Controllers\InstitucionesController;
 use App\Http\Controllers\ReadDataController;
 use App\Http\Controllers\RolesController;
 use App\Http\Controllers\UsersController;
+use App\Models\Institucion;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,6 +46,7 @@ Route::group(["middleware" => ["auth:sanctum", "role:Administrador|Usuario Gener
     Route::get("filter", [InstitucionesController::class, 'filterInstitucion']);
     Route::get('actividades', [ReadDataController::class, 'obtenerActividades']);
     Route::get('tiposPoblacion', [ReadDataController::class, 'obtenerTiposPoblacion']);
+    Route::post('agregarInstitucion', [InstitucionesController::class, 'store']);
 });
 
 // Route::group(["middleware" => ["auth:sanctum", "role:Administrador|Usuario Invitado"]], function () {
@@ -58,4 +60,5 @@ Route::group(["middleware" => ["auth:sanctum", "role:Administrador|Usuario Gener
     Route::get('DataInstituciones', [ReadDataController::class, 'DataInstituciones']);
     Route::get('DataInstitucionesId/{id}', [ReadDataController::class, 'DataInstitucionesId']);
     Route::get('DataInstitucionesDirecciones', [ReadDataController::class, 'DataInstitucionesDirecciones']);
+    Route::get('getAllInformation', [ReadDataController::class, 'getAllInformation']);
 });

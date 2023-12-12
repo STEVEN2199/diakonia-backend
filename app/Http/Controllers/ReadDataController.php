@@ -104,7 +104,7 @@ class ReadDataController extends Controller
                 }
 
                 if (isset($row['contacto'])) {
-                    $contacto_data = explode(" ", $row["contacto"], strlen($row["contacto"]) ? 2 : 1);
+                    $contacto_data = explode(" ", $row["contacto"], strlen($row["contacto"]) % 2 ? 2 : 1);
                     $contacto = Contacto::updateOrCreate([
                         'nombre' => ucwords($contacto_data[0]),
                         'apellido' => ucwords($contacto_data[1]),
@@ -527,5 +527,16 @@ class ReadDataController extends Controller
     {
         $tiposPoblacion = DB::table('tipo_poblacion')->distinct('tipo_poblacion')->get()->toArray();
         return response()->json($tiposPoblacion, 200);
+    }
+
+    public function getAllInformation(Request $request)
+    {
+        $tiposPoblacion = DB::table('tipo_poblacion')->distinct('tipo_poblacion')->get()->toArray();
+        $clasificaciones = DB::table('clasificacion')->distinct('nombre_clasificacion')->get()->toArray();
+        $actividades = DB::table('actividad')->get()->toArray();
+        $sectorizaciones = DB::table('sectorizacion')->get()->toArray();
+        $estados = DB::table('estado')->distinct('nombre_estado')->get()->toArray();
+        $caracterizaciones = DB::table('caracterizacion')->get()->toArray();
+        return response()->json(["tipos_poblacion" => $tiposPoblacion, "caracterizaciones" => $caracterizaciones, "actividades" => $actividades, "sectorizaciones" => $sectorizaciones, "estados" => $estados, "clasificaciones" => $clasificaciones], 200);
     }
 }
