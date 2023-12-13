@@ -58,9 +58,9 @@ class ReadDataController extends Controller
                     'numero_beneficiarios' => intval($row['número_de_beneficiarios'])
                 ],
             );
-            $institucion->caracterizaciones()->attach($caracterizacion->id);
-            $institucion->actividades()->attach($actividad->id);
-            $institucion->sectorizaciones()->attach($sectorizacion->id);
+            $institucion->caracterizaciones()->sync($caracterizacion->id);
+            $institucion->actividades()->sync($actividad->id);
+            $institucion->sectorizaciones()->sync($sectorizacion->id);
 
             if (isset($row['dirección'])) {
                 $coords = explode(",", $row["latitud_y_longitud"]);
