@@ -27,6 +27,11 @@ class Institucion extends Model
         return $this->belongsToMany(Sectorizacion::class, 'sectorizacion_institucion', 'institucion_id', 'sector_id');
     }
 
+    public function clasificaciones()
+    {
+        return $this->belongsToMany(Clasificacion::class, 'clasificacion_institucion', 'institucion_id', 'clasificacion_id');
+    }
+
     public function tipo_poblacion()
     {
         return $this->hasMany(Tipo_poblacion::class, "institucion_id", "id");
@@ -50,10 +55,5 @@ class Institucion extends Model
     public function direccion()
     {
         return $this->hasMany(Direccion::class, "institucion_id", "id");
-    }
-
-    public function clasificacion()
-    {
-        return $this->hasMany(Clasificacion::class, "institucion_id", "id");
     }
 }

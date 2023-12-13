@@ -12,8 +12,8 @@ class Clasificacion extends Model
     protected $fillable = ['nombre_clasificacion', 'condicion', 'institucion_id'];
     protected $hidden = ['created_at', 'updated_at'];
 
-    public function institucion()
+    public function instituciones()
     {
-        return $this->belongsTo(Institucion::class, "id", "institucion_id");
+        return $this->belongsToMany(Institucion::class, 'clasificacion_institucion', 'clasificacion_id', 'institucion_id');
     }
 }
