@@ -68,9 +68,9 @@ class InstitucionesController extends Controller
                 'numero_beneficiarios' => intval($request->input('numero_beneficiarios'))
             ],
         );
-        $institucion->caracterizaciones()->attach($caracterizacion->id);
-        $institucion->actividades()->attach($actividad->id);
-        $institucion->sectorizaciones()->attach($sectorizacion->id);
+        $institucion->caracterizaciones()->sync($caracterizacion->id);
+        $institucion->actividades()->sync($actividad->id);
+        $institucion->sectorizaciones()->sync($sectorizacion->id);
 
         Direccion::updateOrCreate([
             "direccion_nombre" => $request->input("direccion_nombre"),
