@@ -13,10 +13,10 @@ class UsersController extends Controller
     {
         $user = User::find($id);
         $user->update([
-            "name" => $request->input(''),
-            "apellido" => $request->input(''),
-            "telefono" => $request->input(''),
-            "cargo_institucional" => ucwords(strtolower($request->input(''))),
+            "name" => $request->input('name'),
+            "apellido" => $request->input('apellido'),
+            "telefono" => $request->input('telefono'),
+            "cargo_institucional" => ucwords(strtolower($request->input('cargo_institucional'))),
             "email" => $request->input('email'),
             'password' => Hash::make($request->input('password'))
 

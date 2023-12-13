@@ -298,17 +298,14 @@ class ReadDataController extends Controller
             $institucion->sectorizacion = $sectorizacion;
         }
 
-        /*
         foreach ($instituciones as $institucion) {
             $clasificacion = DB::table('clasificacion')
-                ->join('clasificacion_institucion', 'clasificacion.id', '=', 'clasificacion_institucion.clasificacion_id')
-                ->where('clasificacion_institucion.institucion_id', $institucion->id)
+                ->where('clasificacion.institucion_id', $institucion->id)
                 ->select('clasificacion.*')
                 ->get();
 
             $institucion->clasificacion = $clasificacion;
         }
-        */
 
         foreach ($instituciones as $institucion) {
             $tipos_poblacion = DB::table('tipo_poblacion')
