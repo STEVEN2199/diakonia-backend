@@ -32,94 +32,94 @@ class ReadDataController extends Controller
 {
     public function readData(Request $request)
     {
-        try {
-            $request->validate([
-                "data" => "required"
+        // try {
+        $request->validate([
+            "data" => "required"
+        ]);
+        $data = $request->input('data');
+        foreach ($data as $row) {
+
+            $caracterizacion = Caracterizacion::updateOrCreate(['nombre_caracterizacion' => ucwords(strtolower($row["caracterización"]))]);
+
+
+            $actividad = Actividad::updateOrCreate([
+                "nombre_actividad" => ucwords(strtolower(trim($row["actividad"]))),
             ]);
-            $data = $request->input('data');
-            foreach ($data as $row) {
 
-                $caracterizacion = Caracterizacion::updateOrCreate(['nombre_caracterizacion' => ucwords(strtolower($row["caracterización"]))]);
+            $sectorizacion = Sectorizacion::updateOrCreate([
+                "nombre_sectorizacion" => ucwords(strtolower(trim($row["sectorización"]))),
+            ]);
 
+            $institucion = Institucion::updateOrCreate(
+                [
+                    'nombre' => trim($row['nombre_de_las_instituciones']),
+                    'representante_legal' => $row['representante_legal'],
+                    'ruc' => trim($row['ruc']),
+                    'numero_beneficiarios' => intval($row['número_de_beneficiarios'])
+                ],
+            );
+            $institucion->caracterizaciones()->attach($caracterizacion->id);
+            $institucion->actividades()->attach($actividad->id);
+            $institucion->sectorizaciones()->attach($sectorizacion->id);
 
-                $actividad = Actividad::updateOrCreate([
-                    "nombre_actividad" => ucwords(strtolower(trim($row["actividad"]))),
+            if (isset($row['dirección'])) {
+                $coords = explode(",", $row["latitud_y_longitud"]);
+                Direccion::updateOrCreate([
+                    "direccion_nombre" => $row["dirección"],
+                    "url_direccion" => $row["direccion_(google_maps)"],
+                    "latitud" => floatval($coords[0]),
+                    "longitud" => floatval($coords[1]),
+                    "institucion_id" => $institucion->id,
                 ]);
-
-                $sectorizacion = Sectorizacion::updateOrCreate([
-                    "nombre_sectorizacion" => ucwords(strtolower(trim($row["sectorización"]))),
-                ]);
-
-                $institucion = Institucion::updateOrCreate(
-                    [
-                        'nombre' => trim($row['nombre_de_las_instituciones']),
-                        'representante_legal' => $row['representante_legal'],
-                        'ruc' => trim($row['ruc']),
-                        'numero_beneficiarios' => intval($row['número_de_beneficiarios'])
-                    ],
-                );
-                $institucion->caracterizaciones()->attach($caracterizacion->id);
-                $institucion->actividades()->attach($actividad->id);
-                $institucion->sectorizaciones()->attach($sectorizacion->id);
-
-                if (isset($row['dirección'])) {
-                    $coords = explode(",", $row["latitud_y_longitud"]);
-                    Direccion::updateOrCreate([
-                        "direccion_nombre" => $row["dirección"],
-                        "url_direccion" => $row["direccion_(google_maps)"],
-                        "latitud" => floatval($coords[0]),
-                        "longitud" => floatval($coords[1]),
-                        "institucion_id" => $institucion->id,
-                    ]);
-                }
-
-                if (isset($row['tipo_de_población'])) {
-                    Tipo_poblacion::updateOrCreate([
-                        "tipo_poblacion" => trim(ucwords($row["tipo_de_población"])),
-                        "institucion_id" => $institucion->id
-                    ]);
-                }
-
-                if (isset($row['clasificacion_'])) {
-                    Clasificacion::updateOrCreate([
-                        "nombre_clasificacion" => trim(ucwords($row["clasificacion_"])),
-                        "condicion" => false,
-                        "institucion_id" => $institucion->id
-                    ]);
-                }
-
-                if (isset($row['estatus'])) {
-                    Estado::updateOrCreate([
-                        "nombre_estado" => trim(strtoupper($row["estatus"])),
-                        "institucion_id" => $institucion->id,
-                    ]);
-                }
-
-                if (isset($row['mes_de_ingreso_red_bda'])) {
-                    Red_bda::updateOrCreate([
-                        "mes_ingreso" => $row["mes_de_ingreso_red_bda"],
-                        "anio_ingreso" => intval($row["año_de_ingreso_red_bda"]),
-                        "institucion_id" => $institucion->id,
-                    ]);
-                }
-
-                if (isset($row['contacto'])) {
-                    $contacto_data = explode(" ", $row["contacto"], strlen($row["contacto"]) % 2 ? 2 : 1);
-                    $contacto = Contacto::updateOrCreate([
-                        'nombre' => ucwords($contacto_data[0]),
-                        'apellido' => ucwords($contacto_data[1]),
-                        "institucion_id" => $institucion->id,
-                    ]);
-                    Contacto_correo::updateOrCreate(["correo_contacto" => $row["correos"], "contacto_id" => $contacto->id]);
-
-                    Contacto_telefono::updateOrCreate(["telefono_contacto" => trim($row["teléfono"] ?? "no tiene"), "contacto_id" => $contacto->id]);
-                }
             }
-            return response()->json(['success' => true]);
-        } catch (\Exception $e) {
-            error_log($e->getMessage());
-            return response()->json(["message" => "Estamos fuera de servicio, intenta mas tarde."], 500);
+
+            if (isset($row['tipo_de_población'])) {
+                Tipo_poblacion::updateOrCreate([
+                    "tipo_poblacion" => trim(ucwords($row["tipo_de_población"])),
+                    "institucion_id" => $institucion->id
+                ]);
+            }
+
+            if (isset($row['clasificación'])) {
+                Clasificacion::updateOrCreate([
+                    "nombre_clasificacion" => trim(ucwords($row["clasificación"])),
+                    "condicion" => false,
+                    "institucion_id" => $institucion->id
+                ]);
+            }
+
+            if (isset($row['estatus'])) {
+                Estado::updateOrCreate([
+                    "nombre_estado" => trim(strtoupper($row["estatus"])),
+                    "institucion_id" => $institucion->id,
+                ]);
+            }
+
+            if (isset($row['mes_de_ingreso_red_bda'])) {
+                Red_bda::updateOrCreate([
+                    "mes_ingreso" => $row["mes_de_ingreso_red_bda"],
+                    "anio_ingreso" => intval($row["año_de_ingreso_red_bda"]),
+                    "institucion_id" => $institucion->id,
+                ]);
+            }
+
+            if (isset($row['contacto'])) {
+                $contacto_data = explode(" ", $row["contacto"], 2);
+                $contacto = Contacto::updateOrCreate([
+                    'nombre' => ucwords($contacto_data[0]),
+                    'apellido' => ucwords($contacto_data[1]),
+                    "institucion_id" => $institucion->id,
+                ]);
+                Contacto_correo::updateOrCreate(["correo_contacto" => trim($row["correos"] ?? "sin especificar"), "contacto_id" => $contacto->id]);
+
+                Contacto_telefono::updateOrCreate(["telefono_contacto" => trim($row["teléfono"] ?? "sin especificar"), "contacto_id" => $contacto->id]);
+            }
         }
+        return response()->json(['success' => true]);
+        // } catch (\Exception $e) {
+        //     error_log($e->getMessage());
+        //     return response()->json(["message" => "Estamos fuera de servicio, intenta mas tarde."], 500);
+        // }
     }
 
     public function AllData()
