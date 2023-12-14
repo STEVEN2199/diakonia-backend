@@ -9,7 +9,7 @@ class Clasificacion extends Model
 {
     use HasFactory;
     protected $table = 'clasificacion';
-    protected $fillable = ['nombre_clasificacion', 'condicion', 'institucion_id'];
+    protected $fillable = ['nombre_clasificacion'];
     protected $hidden = ['created_at', 'updated_at'];
 
     public function instituciones()

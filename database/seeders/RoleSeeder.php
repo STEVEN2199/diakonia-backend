@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Clasificacion;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
@@ -14,7 +15,6 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
-        //
         $role1 = Role::create(['name' => 'Administrador']);
         $role2 = Role::create(['name' => 'Usuario General']);
         $role3 = Role::create(['name' => 'Usuario Invitado']);
@@ -33,5 +33,14 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'sectores.obtenerSectores'])->syncRoles([$role1]);
         Permission::create(['name' => 'actividades.obtenerActividades'])->syncRoles([$role1]);
         Permission::create(['name' => 'ingresarInstitucion.registrarInstitucion'])->syncRoles([$role1]);
+
+        # Clasificacion
+        Clasificacion::create(["name" => "Salud", "condicion" => true]);
+        Clasificacion::create(["name" => "Rehabilitacion Social", "condicion" => true]);
+        Clasificacion::create(["name" => "Exclusión Social", "condicion" => true]);
+        Clasificacion::create(["name" => "Inseguridad Alimentaria", "condicion" => true]);
+        Clasificacion::create(["name" => "Situación De Calle", "condicion" => true]);
+        Clasificacion::create(["name" => "Albergues", "condicion" => true]);
+        Clasificacion::create(["name" => "Discapacidad", "condicion" => true]);
     }
 }

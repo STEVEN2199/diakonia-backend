@@ -13,9 +13,7 @@ return new class extends Migration
     {
         Schema::create('clasificacion', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre_clasificacion',200);
-            $table->boolean('condicion');
-            $table->foreignId('institucion_id')->constrained('institucion');
+            $table->string('nombre_clasificacion', 50);
             $table->timestamps();
         });
     }

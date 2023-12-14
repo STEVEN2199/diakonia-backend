@@ -58,10 +58,56 @@ class ReadDataController extends Controller
                     'numero_beneficiarios' => intval($row['número_de_beneficiarios'])
                 ],
             );
+
+            // if (isset($row['clasificación'])) {
+            //     Clasificacion::updateOrCreate([
+            //         "nombre_clasificacion" => trim(ucwords($row["clasificación"])),
+            //         "condicion" => false,
+            //         "institucion_id" => $institucion->id
+            //     ]);
+            // }
+            $clasificacionesIds = [];
+            if (isset($row["salud"])) {
+                $clasificacion = Clasificacion::find(["name" => "Salud"]);
+                array_push($clasificacionesIds, $clasificacion->id);
+            }
+
+            if (isset($row["rehabilitacion_social"])) {
+                $clasificacion = Clasificacion::find(["name" => "Rehabilitacion Social"]);
+                array_push($clasificacionesIds, $clasificacion->id);
+            }
+
+            if (isset($row["exclusión_social"])) {
+                $clasificacion = Clasificacion::find(["name" => "Exclusión Social"]);
+                array_push($clasificacionesIds, $clasificacion->id);
+            }
+
+            if (isset($row["inseguridad_alimentaria"])) {
+                $clasificacion = Clasificacion::find(["name" => "Inseguridad Alimentaria"]);
+                array_push($clasificacionesIds, $clasificacion->id);
+            }
+
+            if (isset($row["situación_de_calle"])) {
+                $clasificacion = Clasificacion::find(["name" => "Situación De Calle"]);
+                array_push($clasificacionesIds, $clasificacion->id);
+            }
+
+            if (isset($row["albergues"])) {
+                $clasificacion = Clasificacion::find(["name" => "Albergues"]);
+                array_push($clasificacionesIds, $clasificacion->id);
+            }
+
+            if (isset($row["discapacidad"])) {
+                $clasificacion = Clasificacion::find(["name" => "Discapacidad"]);
+                array_push($clasificacionesIds, $clasificacion->id);
+            }
+
             $institucion->caracterizaciones()->sync($caracterizacion->id);
             $institucion->actividades()->sync($actividad->id);
             $institucion->sectorizaciones()->sync($sectorizacion->id);
-
+            if (is_null($clasificacionesIds)) {
+                $institucion->clasificaciones()->sync($clasificacionesIds);
+            }
             if (isset($row['dirección'])) {
                 $coords = explode(",", $row["latitud_y_longitud"]);
                 Direccion::updateOrCreate([
@@ -76,14 +122,6 @@ class ReadDataController extends Controller
             if (isset($row['tipo_de_población'])) {
                 Tipo_poblacion::updateOrCreate([
                     "tipo_poblacion" => trim(ucwords($row["tipo_de_población"])),
-                    "institucion_id" => $institucion->id
-                ]);
-            }
-
-            if (isset($row['clasificación'])) {
-                Clasificacion::updateOrCreate([
-                    "nombre_clasificacion" => trim(ucwords($row["clasificación"])),
-                    "condicion" => false,
                     "institucion_id" => $institucion->id
                 ]);
             }

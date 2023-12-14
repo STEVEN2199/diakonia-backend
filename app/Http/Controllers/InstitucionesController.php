@@ -71,6 +71,7 @@ class InstitucionesController extends Controller
         $institucion->caracterizaciones()->sync($caracterizacion->id);
         $institucion->actividades()->sync($actividad->id);
         $institucion->sectorizaciones()->sync($sectorizacion->id);
+        $institucion->clasificaciones()->sync($request->input("clasificaciones"));
 
         Direccion::updateOrCreate([
             "direccion_nombre" => $request->input("direccion_nombre"),
@@ -85,11 +86,11 @@ class InstitucionesController extends Controller
             "institucion_id" => $institucion->id
         ]);
 
-        Clasificacion::updateOrCreate([
-            "nombre_clasificacion" => trim(ucwords($request->input("nombre_clasificacion"))),
-            "condicion" => trim(ucwords($request->input("condicion"))),
-            "institucion_id" => $institucion->id
-        ]);
+        // Clasificacion::updateOrCreate([
+        //     "nombre_clasificacion" => trim(ucwords($request->input("nombre_clasificacion"))),
+        //     "condicion" => trim(ucwords($request->input("condicion"))),
+        //     "institucion_id" => $institucion->id
+        // ]);
 
         Estado::updateOrCreate([
             "nombre_estado" => trim(strtoupper($request->input("nombre_estado"))),
@@ -161,6 +162,7 @@ class InstitucionesController extends Controller
         $institucion->caracterizaciones()->sync($request->input("caracterizaciones"));
         $institucion->actividades()->sync($request->input("actividades"));
         $institucion->sectorizaciones()->sync($request->input("sectorizaciones"));
+        $institucion->clasificaciones()->sync($request->input("clasificaciones"));
 
         $institucion->tipo_poblacion()->update([
             "tipo_poblacion" => trim(ucwords($request->input("tipo_poblacion"))),
@@ -182,7 +184,7 @@ class InstitucionesController extends Controller
             "latitud" => floatval($request->input("latitud")),
             "longitud" => floatval($request->input("longitud")),
         ]);
-        $institucion->clasificacion()->update(["nombre_clasificacion" => ucwords($request->input("nombre_clasificacion"))]);
+        // $institucion->clasificacion()->update(["nombre_clasificacion" => ucwords($request->input("nombre_clasificacion"))]);
         $contacto = Contacto::find($institucion->id);
         $contacto->contacto_correo()->update(["correo_contacto" => $request->input("correo_contacto")]);
         $contacto->contacto_telefono()->update(["contacto_telefono" => $request->input("contacto_telefono")]);
