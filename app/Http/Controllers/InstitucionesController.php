@@ -140,14 +140,12 @@ class InstitucionesController extends Controller
             "longitud" => "required",
             "nombre_clasificacion" => "required",
         ]);
-        $user = Auth::user();
+        $user = auth()->user();
         $institucion = Institucion::find($id);
         if (!$institucion) {
             return response()->json(["message" => "No existe la institucion"], 404);
         }
         // Cualquier Role
-        error_log(strcmp($user->cargo_institucion, "Administrador") ? "User": "Admin");
-        error_log($user->cargo_institucion);
         if (strcmp($user->cargo_institucion, "Administrador")) {
             $institucion->update(["numero_beneficiarios" => intval($request->input('numero_beneficiarios'))]);
             $institucion->contacto()->update(["nombre" => $request->input("nombre_contacto"), "apellido" => $request->input("apellido_contacto")]);
