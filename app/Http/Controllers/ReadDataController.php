@@ -68,37 +68,37 @@ class ReadDataController extends Controller
             // }
             $clasificacionesIds = [];
             if (isset($row["salud"])) {
-                $clasificacion = Clasificacion::find(["name" => "Salud"]);
+                $clasificacion = Clasificacion::where("nombre_clasificacion", "=", "Salud")->first();
                 array_push($clasificacionesIds, $clasificacion->id);
             }
 
             if (isset($row["rehabilitacion_social"])) {
-                $clasificacion = Clasificacion::find(["name" => "Rehabilitacion Social"]);
+                $clasificacion = Clasificacion::where("nombre_clasificacion", "=", "Rehabilitacion Social")->first();
                 array_push($clasificacionesIds, $clasificacion->id);
             }
 
             if (isset($row["exclusión_social"])) {
-                $clasificacion = Clasificacion::find(["name" => "Exclusión Social"]);
+                $clasificacion = Clasificacion::where("nombre_clasificacion", "=", "Exclusión Social")->first();
                 array_push($clasificacionesIds, $clasificacion->id);
             }
 
             if (isset($row["inseguridad_alimentaria"])) {
-                $clasificacion = Clasificacion::find(["name" => "Inseguridad Alimentaria"]);
+                $clasificacion = Clasificacion::where("nombre_clasificacion", "=", "Inseguridad Alimentaria")->first();
                 array_push($clasificacionesIds, $clasificacion->id);
             }
 
             if (isset($row["situación_de_calle"])) {
-                $clasificacion = Clasificacion::find(["name" => "Situación De Calle"]);
+                $clasificacion = Clasificacion::where("nombre_clasificacion", "=", "Situación De Calle")->first();
                 array_push($clasificacionesIds, $clasificacion->id);
             }
 
             if (isset($row["albergues"])) {
-                $clasificacion = Clasificacion::find(["name" => "Albergues"]);
+                $clasificacion = Clasificacion::where("nombre_clasificacion", "=", "Albergues")->first();
                 array_push($clasificacionesIds, $clasificacion->id);
             }
 
             if (isset($row["discapacidad"])) {
-                $clasificacion = Clasificacion::find(["name" => "Discapacidad"]);
+                $clasificacion = Clasificacion::where("nombre_clasificacion", "=", "Discapacidad")->first();
                 array_push($clasificacionesIds, $clasificacion->id);
             }
 
@@ -567,7 +567,7 @@ class ReadDataController extends Controller
     public function getAllInformation(Request $request)
     {
         $tiposPoblacion = DB::table('tipo_poblacion')->distinct('tipo_poblacion')->get()->toArray();
-        $clasificaciones = DB::table('clasificacion')->distinct('nombre_clasificacion')->get()->toArray();
+        $clasificaciones = DB::table('clasificaciones')->distinct('nombre_clasificacion')->get()->toArray();
         $actividades = DB::table('actividad')->get()->toArray();
         $sectorizaciones = DB::table('sectorizacion')->get()->toArray();
         $estados = DB::table('estado')->distinct('nombre_estado')->get()->toArray();

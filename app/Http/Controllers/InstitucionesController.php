@@ -17,16 +17,13 @@ use App\Models\Tipo_poblacion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class InstitucionesController extends Controller
-{
-    public function disableInstitucion(Institucion $institucion)
-    {
+class InstitucionesController extends Controller {
+    public function disableInstitucion(Institucion $institucion) {
         $institucion->estado()->update(["nombre_estado" => "PASIVA"]);
         return response()->json(["message" => "Estado de la institucion actualizada"], 200);
     }
 
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
         $request->validate([
             "nombre_caracterizacion" => "required",
             "nombre_actividad" => "required",
@@ -71,7 +68,7 @@ class InstitucionesController extends Controller
         $institucion->caracterizaciones()->sync($caracterizacion->id);
         $institucion->actividades()->sync($actividad->id);
         $institucion->sectorizaciones()->sync($sectorizacion->id);
-        $institucion->clasificaciones()->sync($request->input("clasificaciones"));
+        $institucion->clasificaciones()->sync($request->input("nombre_clasificacion"));
 
         Direccion::updateOrCreate([
             "direccion_nombre" => $request->input("direccion_nombre"),
@@ -114,8 +111,7 @@ class InstitucionesController extends Controller
         return response()->json(['Institucion Registrada Sastifactoriamente' => true], 201);
     }
 
-    public function editInstitucion(Request $request, $id)
-    {
+    public function editInstitucion(Request $request, $id) {
         $request->validate([
             "numero_beneficiarios" => "required",
             "nombre_contacto" => "required",
@@ -162,7 +158,7 @@ class InstitucionesController extends Controller
         $institucion->caracterizaciones()->sync($request->input("caracterizaciones"));
         $institucion->actividades()->sync($request->input("actividades"));
         $institucion->sectorizaciones()->sync($request->input("sectorizaciones"));
-        $institucion->clasificaciones()->sync($request->input("clasificaciones"));
+        $institucion->clasificaciones()->sync($request->input("nombre_clasificacion"));
 
         $institucion->tipo_poblacion()->update([
             "tipo_poblacion" => trim(ucwords($request->input("tipo_poblacion"))),
@@ -191,8 +187,7 @@ class InstitucionesController extends Controller
         return response()->json(["message" => "Informacion Actualizada"], 200);
     }
 
-    public function filterInstitucion(Request $request)
-    {
+    public function filterInstitucion(Request $request) {
         $tipoPoblacion = $request->query('tipo_poblacion');
         $actividad = $request->query('nombre_actividad');
         if (is_null($tipoPoblacion) && is_null($actividad)) {
@@ -200,20 +195,20 @@ class InstitucionesController extends Controller
         }
 
         if (is_null($tipoPoblacion) && $actividad) {
-            $instituciones = Institucion::with(['actividades', 'tipo_poblacion', 'red_bda', "clasificacion", "sectorizaciones", "contacto", "direccion", "estado", "caracterizaciones", "contacto.contacto_correo", "contacto.contacto_telefono"])->whereHas('actividades', function ($q) use ($actividad) {
+            $instituciones = Institucion::with(['actividades', 'tipo_poblacion', 'red_bda', "clasificaciones", "sectorizaciones", "contacto", "direccion", "estado", "caracterizaciones", "contacto.contacto_correo", "contacto.contacto_telefono"])->whereHas('actividades', function ($q) use ($actividad) {
                 $q->where("actividad.nombre_actividad", "=", $actividad);
             })->get();
             return response()->json(["instituciones" => $instituciones, "total" => count($instituciones)], 200);
         }
 
         if (is_null($actividad) && $tipoPoblacion) {
-            $instituciones = Institucion::with(['actividades', 'tipo_poblacion', 'red_bda', "clasificacion", "sectorizaciones", "contacto", "direccion", "estado", "caracterizaciones", "contacto.contacto_correo", "contacto.contacto_telefono"])->whereHas('tipo_poblacion', function ($q) use ($tipoPoblacion) {
+            $instituciones = Institucion::with(['actividades', 'tipo_poblacion', 'red_bda', "clasificaciones", "sectorizaciones", "contacto", "direccion", "estado", "caracterizaciones", "contacto.contacto_correo", "contacto.contacto_telefono"])->whereHas('tipo_poblacion', function ($q) use ($tipoPoblacion) {
                 $q->where("tipo_poblacion.tipo_poblacion", "=", $tipoPoblacion);
             })->get();
             return response()->json(["instituciones" => $instituciones, "total" => count($instituciones)], 200);
         }
 
-        $instituciones = Institucion::with(['actividades', 'tipo_poblacion', 'red_bda', "clasificacion", "sectorizaciones", "contacto", "direccion", "estado", "caracterizaciones", "contacto.contacto_correo", "contacto.contacto_telefono"])
+        $instituciones = Institucion::with(['actividades', 'tipo_poblacion', 'red_bda', "clasificaciones", "sectorizaciones", "contacto", "direccion", "estado", "caracterizaciones", "contacto.contacto_correo", "contacto.contacto_telefono"])
             ->whereHas('actividades', function ($q) use ($actividad) {
                 $q->where("actividad.nombre_actividad", "=", $actividad);
             })->whereHas('tipo_poblacion', function ($q) use ($tipoPoblacion) {

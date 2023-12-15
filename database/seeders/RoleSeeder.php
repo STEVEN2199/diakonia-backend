@@ -35,12 +35,12 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'ingresarInstitucion.registrarInstitucion'])->syncRoles([$role1]);
 
         # Clasificacion
-        Clasificacion::create(["name" => "Salud", "condicion" => true]);
-        Clasificacion::create(["name" => "Rehabilitacion Social", "condicion" => true]);
-        Clasificacion::create(["name" => "Exclusión Social", "condicion" => true]);
-        Clasificacion::create(["name" => "Inseguridad Alimentaria", "condicion" => true]);
-        Clasificacion::create(["name" => "Situación De Calle", "condicion" => true]);
-        Clasificacion::create(["name" => "Albergues", "condicion" => true]);
-        Clasificacion::create(["name" => "Discapacidad", "condicion" => true]);
+        Clasificacion::create(["nombre_clasificacion" => "Salud"]);
+        Clasificacion::create(["nombre_clasificacion" => "Rehabilitacion Social"]);
+        Clasificacion::create(["nombre_clasificacion" => "Exclusión Social"]);
+        Clasificacion::create(["nombre_clasificacion" => "Inseguridad Alimentaria"]);
+        Clasificacion::create(["nombre_clasificacion" => "Situación De Calle"]);
+        Clasificacion::create(["nombre_clasificacion" => "Albergues"]);
+        Clasificacion::create(["nombre_clasificacion" => "Discapacidad"]);
     }
 }
