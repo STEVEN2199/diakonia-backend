@@ -13,12 +13,12 @@ class Contacto extends Model
 
     public function contacto_correo()
     {
-        return $this->hasMany(Contacto_correo::class);
+        return $this->hasMany(Contacto_correo::class, "contacto_id", "id");
     }
 
     public function contacto_telefono()
     {
-        return $this->hasMany(Contacto_telefono::class);
+        return $this->hasMany(Contacto_telefono::class, "contacto_id", "id");
     }
 
     public function institucion()

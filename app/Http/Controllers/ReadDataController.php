@@ -105,7 +105,7 @@ class ReadDataController extends Controller
             $institucion->caracterizaciones()->sync($caracterizacion->id);
             $institucion->actividades()->sync($actividad->id);
             $institucion->sectorizaciones()->sync($sectorizacion->id);
-            if (is_null($clasificacionesIds)) {
+            if (!is_null($clasificacionesIds)) {
                 $institucion->clasificaciones()->sync($clasificacionesIds);
             }
             if (isset($row['dirección'])) {
@@ -338,7 +338,8 @@ class ReadDataController extends Controller
 
         foreach ($instituciones as $institucion) {
             $clasificacion = DB::table('clasificacion')
-                ->where('clasificacion.institucion_id', $institucion->id)
+                ->join('clasificacion_institucion', 'clasificacion.id', '=', 'clasificacion_institucion.clasificacion_id')
+                ->where('clasificacion_institucion.institucion_id', $institucion->id)
                 ->select('clasificacion.*')
                 ->get();
 
@@ -567,7 +568,7 @@ class ReadDataController extends Controller
     public function getAllInformation(Request $request)
     {
         $tiposPoblacion = DB::table('tipo_poblacion')->distinct('tipo_poblacion')->get()->toArray();
-        $clasificaciones = DB::table('clasificaciones')->distinct('nombre_clasificacion')->get()->toArray();
+        $clasificaciones = DB::table('clasificacion')->distinct('nombre_clasificacion')->get()->toArray();
         $actividades = DB::table('actividad')->get()->toArray();
         $sectorizaciones = DB::table('sectorizacion')->get()->toArray();
         $estados = DB::table('estado')->distinct('nombre_estado')->get()->toArray();

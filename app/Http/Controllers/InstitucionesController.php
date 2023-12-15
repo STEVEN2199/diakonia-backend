@@ -17,13 +17,16 @@ use App\Models\Tipo_poblacion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class InstitucionesController extends Controller {
-    public function disableInstitucion(Institucion $institucion) {
+class InstitucionesController extends Controller
+{
+    public function disableInstitucion(Institucion $institucion)
+    {
         $institucion->estado()->update(["nombre_estado" => "PASIVA"]);
         return response()->json(["message" => "Estado de la institucion actualizada"], 200);
     }
 
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         $request->validate([
             "nombre_caracterizacion" => "required",
             "nombre_actividad" => "required",
@@ -45,17 +48,16 @@ class InstitucionesController extends Controller {
             "apellido_contacto" => "required",
             "correo_contacto" => "required",
             "telefono_contacto" => "required",
-            "condicion" => "required"
         ]);
-        $caracterizacion = Caracterizacion::updateOrCreate(['nombre_caracterizacion' => ucwords(strtolower($request->input("nombre_caracterizacion")))]);
+        // $caracterizacion = Caracterizacion::updateOrCreate(['nombre_caracterizacion' => ucwords(strtolower($request->input("nombre_caracterizacion")))]);
 
-        $actividad = Actividad::updateOrCreate([
-            "nombre_actividad" => ucwords(strtolower(trim($request->input("nombre_actividad")))),
-        ]);
+        // $actividad = Actividad::updateOrCreate([
+        //     "nombre_actividad" => ucwords(strtolower(trim($request->input("nombre_actividad")))),
+        // ]);
 
-        $sectorizacion = Sectorizacion::updateOrCreate([
-            "nombre_sectorizacion" => ucwords(strtolower(trim($request->input("nombre_sectorizacion")))),
-        ]);
+        // $sectorizacion = Sectorizacion::updateOrCreate([
+        //     "nombre_sectorizacion" => ucwords(strtolower(trim($request->input("nombre_sectorizacion")))),
+        // ]);
 
         $institucion = Institucion::updateOrCreate(
             [
@@ -65,9 +67,12 @@ class InstitucionesController extends Controller {
                 'numero_beneficiarios' => intval($request->input('numero_beneficiarios'))
             ],
         );
-        $institucion->caracterizaciones()->sync($caracterizacion->id);
-        $institucion->actividades()->sync($actividad->id);
-        $institucion->sectorizaciones()->sync($sectorizacion->id);
+        // $institucion->caracterizaciones()->sync($caracterizacion->id);
+        // $institucion->actividades()->sync($actividad->id);
+        // $institucion->sectorizaciones()->sync($sectorizacion->id);
+        $institucion->caracterizaciones()->sync($request->input("nombre_caracterizacion"));
+        $institucion->actividades()->sync($request->input("nombre_actividad"));
+        $institucion->sectorizaciones()->sync($request->input("nombre_sectorizacion"));
         $institucion->clasificaciones()->sync($request->input("nombre_clasificacion"));
 
         Direccion::updateOrCreate([
@@ -111,7 +116,8 @@ class InstitucionesController extends Controller {
         return response()->json(['Institucion Registrada Sastifactoriamente' => true], 201);
     }
 
-    public function editInstitucion(Request $request, $id) {
+    public function editInstitucion(Request $request, $id)
+    {
         $request->validate([
             "numero_beneficiarios" => "required",
             "nombre_contacto" => "required",
@@ -140,12 +146,14 @@ class InstitucionesController extends Controller {
             return response()->json(["message" => "No existe la institucion"], 404);
         }
         // Cualquier Role
+        error_log(strcmp($user->cargo_institucion, "Administrador") ? "User": "Admin");
+        error_log($user->cargo_institucion);
         if (strcmp($user->cargo_institucion, "Administrador")) {
             $institucion->update(["numero_beneficiarios" => intval($request->input('numero_beneficiarios'))]);
             $institucion->contacto()->update(["nombre" => $request->input("nombre_contacto"), "apellido" => $request->input("apellido_contacto")]);
             $contacto = Contacto::find($institucion->id);
             $contacto->contacto_correo()->update(["correo_contacto" => $request->input("correo_contacto")]);
-            $contacto->contacto_telefono()->update(["contacto_telefono" => $request->input("telefono_contacto")]);
+            $contacto->contacto_telefono()->update(["telefono_contacto" => $request->input("telefono_contacto")]);
             return response()->json(["message" => "Informacion Institucion Actualizada"], 200);
         }
         // Administrador Role
@@ -181,13 +189,14 @@ class InstitucionesController extends Controller {
             "longitud" => floatval($request->input("longitud")),
         ]);
         // $institucion->clasificacion()->update(["nombre_clasificacion" => ucwords($request->input("nombre_clasificacion"))]);
-        $contacto = Contacto::find($institucion->id);
+        $contacto = Contacto::where("institucion_id", "=", $institucion->id)->first();
         $contacto->contacto_correo()->update(["correo_contacto" => $request->input("correo_contacto")]);
-        $contacto->contacto_telefono()->update(["contacto_telefono" => $request->input("contacto_telefono")]);
+        $contacto->contacto_telefono()->update(["telefono_contacto" => $request->input("telefono_contacto")]);
         return response()->json(["message" => "Informacion Actualizada"], 200);
     }
 
-    public function filterInstitucion(Request $request) {
+    public function filterInstitucion(Request $request)
+    {
         $tipoPoblacion = $request->query('tipo_poblacion');
         $actividad = $request->query('nombre_actividad');
         if (is_null($tipoPoblacion) && is_null($actividad)) {

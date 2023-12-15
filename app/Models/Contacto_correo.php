@@ -15,6 +15,6 @@ class Contacto_correo extends Model
 
     public function contacto()
     {
-        return $this->belongsTo(Contacto::class);
+        return $this->belongsTo(Contacto::class, "id", "contacto_id");
     }
 }
