@@ -21,8 +21,9 @@ use function Laravel\Prompts\error;
 
 class InstitucionesController extends Controller
 {
-    public function disableInstitucion(Institucion $institucion)
+    public function disableInstitucion(Request $request, $id)
     {
+        $institucion = Institucion::where("id", intval($id))->first();
         $institucion->estado()->update(["nombre_estado" => "PASIVA"]);
         return response()->json(["message" => "Estado de la institucion actualizada"], 200);
     }
@@ -171,7 +172,7 @@ class InstitucionesController extends Controller
             "tipo_poblacion" => trim(ucwords($request->input("tipo_poblacion"))),
         ]);
         $institucion->estado()->update([
-            "nombre_estado" => trim(ucwords($request->input("nombre_estado"))),
+            "nombre_estado" => trim(strtoupper($request->input("nombre_estado"))),
         ]);
         $institucion->contacto()->update([
             'nombre' => ucwords($request->input("nombre_contacto")),
