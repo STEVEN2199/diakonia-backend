@@ -35,6 +35,9 @@ Route::middleware(["auth:sanctum", 'role:Administrador'])->group(function () {
     Route::get('DataUsers', [AuthController::class, 'AllUsers']);
     Route::put("/users/{id}", [UsersController::class, 'edit']);
     Route::delete("/users/{id}", [UsersController::class, 'destroy']);
+    Route::delete("/users/{id}", [UsersController::class, 'destroy']);
+    Route::get('userProfile', [UsersController::class, 'userProfile']);
+
 });
 
 Route::get("roles", [RolesController::class, 'index']);

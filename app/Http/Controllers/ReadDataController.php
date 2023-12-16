@@ -169,6 +169,7 @@ class ReadDataController extends Controller
     {
         $query = DB::table('institucion')
             ->join('estado', 'institucion.id', '=', 'estado.institucion_id')
+            ->orderBy('updated_at', 'DESC')
             ->get();
 
         return $query->toArray();
@@ -176,7 +177,8 @@ class ReadDataController extends Controller
 
     public function DataInstituciones(Request $request)
     {
-        $instituciones = DB::table('institucion')->get();
+        $instituciones = DB::table('institucion')->orderBy('updated_at', 'desc')
+            ->get();
 
         foreach ($instituciones as $institucion) {
             $actividades = DB::table('actividad')
@@ -304,6 +306,7 @@ class ReadDataController extends Controller
     {
         $instituciones = DB::table('institucion')
             ->where('institucion.id', $id)
+            ->orderBy('updated_at', 'desc')
             ->get();
 
         foreach ($instituciones as $institucion) {
