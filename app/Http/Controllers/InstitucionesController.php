@@ -35,10 +35,10 @@ class InstitucionesController extends Controller
             "representante_legal" => "required",
             "ruc" => "required",
             "numero_beneficiarios" => "required",
-            "direccion_nombre" => "required",
-            "url_direccion" => "required",
-            "latitud" => "required",
-            "longitud" => "required",
+            // "direccion_nombre" => "required",
+            // "url_direccion" => "required",
+            // "latitud" => "required",
+            // "longitud" => "required",
             "tipo_poblacion" => "required",
             "nombre_clasificacion" => "required",
             "nombre_estado" => "required",
@@ -46,8 +46,11 @@ class InstitucionesController extends Controller
             "anio_ingreso" => "required",
             "nombre_contacto" => "required",
             "apellido_contacto" => "required",
-            "correo_contacto" => "required",
-            "telefono_contacto" => "required",
+            // "correo_contacto" => "required",
+            // "telefono_contacto" => "required",
+            "telefonos" => "required",
+            "correos" => "required",
+            "direcciones" => "required"
         ]);
         // $caracterizacion = Caracterizacion::updateOrCreate(['nombre_caracterizacion' => ucwords(strtolower($request->input("nombre_caracterizacion")))]);
 
@@ -75,13 +78,23 @@ class InstitucionesController extends Controller
         $institucion->sectorizaciones()->sync($request->input("nombre_sectorizacion"));
         $institucion->clasificaciones()->sync($request->input("nombre_clasificacion"));
 
-        Direccion::updateOrCreate([
-            "direccion_nombre" => $request->input("direccion_nombre"),
-            "url_direccion" => $request->input("url_direccion"),
-            "latitud" => floatval($request->input("latitud")),
-            "longitud" => floatval($request->input("longitud")),
-            "institucion_id" => $institucion->id,
-        ]);
+        // Direccion::updateOrCreate([
+        //     "direccion_nombre" => $request->input("direccion_nombre"),
+        //     "url_direccion" => $request->input("url_direccion"),
+        //     "latitud" => floatval($request->input("latitud")),
+        //     "longitud" => floatval($request->input("longitud")),
+        //     "institucion_id" => $institucion->id,
+        // ]);
+
+        foreach ($request->input("direcciones") as $direccion) {
+            Direccion::updateOrCreate([
+                "direccion_nombre" => $direccion["direccion_nombre"],
+                "url_direccion" => $direccion["url_direccion"],
+                "latitud" => floatval($direccion["latitud"]),
+                "longitud" => floatval($direccion["longitud"]),
+                "institucion_id" => $institucion->id,
+            ]);
+        }
 
         Tipo_poblacion::updateOrCreate([
             "tipo_poblacion" => trim(ucwords($request->input("tipo_poblacion"))),
@@ -110,9 +123,16 @@ class InstitucionesController extends Controller
             'apellido' => ucwords($request->input("apellido_contacto")),
             "institucion_id" => $institucion->id,
         ]);
-        Contacto_correo::updateOrCreate(["correo_contacto" => $request->input("correo_contacto"), "contacto_id" => $contacto->id]);
 
-        Contacto_telefono::updateOrCreate(["telefono_contacto" => trim($request->input("telefono_contacto")), "contacto_id" => $contacto->id]);
+        foreach ($request->input("correos") as $correo) {
+            Contacto_correo::updateOrCreate(["correo_contacto" => $correo["correo_contacto"], "contacto_id" => $contacto->id]);
+        }
+
+        foreach ($request->input("telefonos") as $telefono) {
+            Contacto_telefono::updateOrCreate(["telefono_contacto" => trim($telefono["correo_contacto"]), "contacto_id" => $contacto->id]);
+        }
+
+        // Contacto_telefono::updateOrCreate(["telefono_contacto" => trim($request->input("telefono_contacto")), "contacto_id" => $contacto->id]);
         return response()->json(['Institucion Registrada Sastifactoriamente' => true], 201);
     }
 
