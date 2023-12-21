@@ -200,16 +200,22 @@ class InstitucionesController extends Controller
             "mes_ingreso" => $request->input("mes_ingreso"),
             "anio_ingreso" => intval($request->input("anio_ingreso")),
         ]);
-        $institucion->direccion()->update([
-            "direccion_nombre" => $request->input("direccion_nombre"),
-            "url_direccion" => $request->input("url_direccion"),
-            "latitud" => floatval($request->input("latitud")),
-            "longitud" => floatval($request->input("longitud")),
-        ]);
-        // $institucion->clasificacion()->update(["nombre_clasificacion" => ucwords($request->input("nombre_clasificacion"))]);
+        // $institucion->direccion()->update([
+        //     "direccion_nombre" => $request->input("direccion_nombre"),
+        //     "url_direccion" => $request->input("url_direccion"),
+        //     "latitud" => floatval($request->input("latitud")),
+        //     "longitud" => floatval($request->input("longitud")),
+        // ]);
+        $institucion->direccion()->delete();
+        $institucion->direccion()->saveMany($request->input("direcciones"));
+
         $contacto = Contacto::where("institucion_id", "=", $institucion->id)->first();
-        $contacto->contacto_correo()->update(["correo_contacto" => $request->input("correo_contacto")]);
-        $contacto->contacto_telefono()->update(["telefono_contacto" => $request->input("telefono_contacto")]);
+        $contacto->contacto_correo()->delete();
+        $contacto->contacto_correo()->saveMany($request->input("correos"));
+        $contacto->contacto_telefono()->delete();
+        $contacto->contacto_telefono()->saveMany($request->input("telefonos"));
+        // $contacto->contacto_correo()->update(["correo_contacto" => $request->input("correo_contacto")]);
+        // $contacto->contacto_telefono()->update(["telefono_contacto" => $request->input("telefono_contacto")]);
         return response()->json(["message" => "Informacion Actualizada"], 200);
     }
 
