@@ -49,14 +49,14 @@ class AuthController extends Controller
         $token = $user->createToken('token')->plainTextToken;
         // $token = $user->createToken('auth_token')->accessToken;
 
-        $cookie = cookie('jwt', $token, 60 * 24);
+        $cookie = cookie('cookie_token', $token, 60 * 24);
 
         return response([
             'message' => 'Success',
             'token' => $token,
             'user' => $user->cargo_institucional,
             'roles' => $user->getRoleNames()
-        ])->withCookie($cookie);
+        ])->withoutCookie($cookie);
     }
 
     public function logout(Request $request)

@@ -31,4 +31,13 @@ class UsersController extends Controller
         $user->delete();
         return response()->json(["message" => "User Eliminado"], 200);
     }
+
+    public function userProfile(Request $request)
+    {
+        $user = auth()->user();
+        return response()->json([
+            "user" => $user->id,
+            "rol" => $user->cargo_institucional
+        ], 200);
+    }
 }

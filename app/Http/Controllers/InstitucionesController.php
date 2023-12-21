@@ -17,10 +17,13 @@ use App\Models\Tipo_poblacion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+use function Laravel\Prompts\error;
+
 class InstitucionesController extends Controller
 {
-    public function disableInstitucion(Institucion $institucion)
+    public function disableInstitucion(Request $request, $id)
     {
+        $institucion = Institucion::where("id", intval($id))->first();
         $institucion->estado()->update(["nombre_estado" => "PASIVA"]);
         return response()->json(["message" => "Estado de la institucion actualizada"], 200);
     }
@@ -160,13 +163,12 @@ class InstitucionesController extends Controller
             "longitud" => "required",
             "nombre_clasificacion" => "required",
         ]);
-        $user = auth()->user();
         $institucion = Institucion::find($id);
         if (!$institucion) {
             return response()->json(["message" => "No existe la institucion"], 404);
         }
         // Cualquier Role
-        if (strcmp($user->cargo_institucion, "Administrador")) {
+        if (strcmp(auth()->user()->cargo_institucional, "Administrador")) {
             $institucion->update(["numero_beneficiarios" => intval($request->input('numero_beneficiarios'))]);
             $institucion->contacto()->update(["nombre" => $request->input("nombre_contacto"), "apellido" => $request->input("apellido_contacto")]);
             $contacto = Contacto::find($institucion->id);
@@ -190,7 +192,7 @@ class InstitucionesController extends Controller
             "tipo_poblacion" => trim(ucwords($request->input("tipo_poblacion"))),
         ]);
         $institucion->estado()->update([
-            "nombre_estado" => trim(ucwords($request->input("nombre_estado"))),
+            "nombre_estado" => trim(strtoupper($request->input("nombre_estado"))),
         ]);
         $institucion->contacto()->update([
             'nombre' => ucwords($request->input("nombre_contacto")),
