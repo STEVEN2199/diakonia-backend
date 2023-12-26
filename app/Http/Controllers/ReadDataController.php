@@ -370,7 +370,7 @@ class ReadDataController extends Controller
         foreach ($instituciones as $institucion) {
             $direccion = DB::table('direccion')
                 ->where('direccion.institucion_id', $institucion->id)
-                ->select('direccion.*')
+                ->select('direccion.direccion_nombre', "direccion.latitud", "direccion.url_direccion", "direccion.longitud")
                 ->get();
 
             $institucion->direccion = $direccion;
