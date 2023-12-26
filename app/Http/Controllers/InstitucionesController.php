@@ -55,15 +55,6 @@ class InstitucionesController extends Controller
             "correos" => "required",
             "direcciones" => "required"
         ]);
-        // $caracterizacion = Caracterizacion::updateOrCreate(['nombre_caracterizacion' => ucwords(strtolower($request->input("nombre_caracterizacion")))]);
-
-        // $actividad = Actividad::updateOrCreate([
-        //     "nombre_actividad" => ucwords(strtolower(trim($request->input("nombre_actividad")))),
-        // ]);
-
-        // $sectorizacion = Sectorizacion::updateOrCreate([
-        //     "nombre_sectorizacion" => ucwords(strtolower(trim($request->input("nombre_sectorizacion")))),
-        // ]);
 
         $institucion = Institucion::updateOrCreate(
             [
@@ -73,21 +64,11 @@ class InstitucionesController extends Controller
                 'numero_beneficiarios' => intval($request->input('numero_beneficiarios'))
             ],
         );
-        // $institucion->caracterizaciones()->sync($caracterizacion->id);
-        // $institucion->actividades()->sync($actividad->id);
-        // $institucion->sectorizaciones()->sync($sectorizacion->id);
+
         $institucion->caracterizaciones()->sync($request->input("nombre_caracterizacion"));
         $institucion->actividades()->sync($request->input("nombre_actividad"));
         $institucion->sectorizaciones()->sync($request->input("nombre_sectorizacion"));
         $institucion->clasificaciones()->sync($request->input("nombre_clasificacion"));
-
-        // Direccion::updateOrCreate([
-        //     "direccion_nombre" => $request->input("direccion_nombre"),
-        //     "url_direccion" => $request->input("url_direccion"),
-        //     "latitud" => floatval($request->input("latitud")),
-        //     "longitud" => floatval($request->input("longitud")),
-        //     "institucion_id" => $institucion->id,
-        // ]);
 
         foreach ($request->input("direcciones") as $direccion) {
             Direccion::updateOrCreate([
@@ -103,12 +84,6 @@ class InstitucionesController extends Controller
             "tipo_poblacion" => trim(ucwords($request->input("tipo_poblacion"))),
             "institucion_id" => $institucion->id
         ]);
-
-        // Clasificacion::updateOrCreate([
-        //     "nombre_clasificacion" => trim(ucwords($request->input("nombre_clasificacion"))),
-        //     "condicion" => trim(ucwords($request->input("condicion"))),
-        //     "institucion_id" => $institucion->id
-        // ]);
 
         Estado::updateOrCreate([
             "nombre_estado" => trim(strtoupper($request->input("nombre_estado"))),
@@ -145,8 +120,6 @@ class InstitucionesController extends Controller
             "numero_beneficiarios" => "required",
             "nombre_contacto" => "required",
             "apellido_contacto" => "required",
-            "correo_contacto" => "required",
-            "telefono_contacto" => "required",
             "nombre" => "required",
             "representante_legal" => "required",
             "ruc" => "required",
@@ -157,11 +130,10 @@ class InstitucionesController extends Controller
             "nombre_estado" => "required",
             "mes_ingreso" => "required",
             "anio_ingreso" => "required",
-            "direccion_nombre" => "required",
-            "url_direccion" => "required",
-            "latitud" => "required",
-            "longitud" => "required",
             "nombre_clasificacion" => "required",
+            "telefonos" => "required",
+            "correos" => "required",
+            "direcciones" => "required"
         ]);
         $institucion = Institucion::find($id);
         if (!$institucion) {
@@ -202,22 +174,26 @@ class InstitucionesController extends Controller
             "mes_ingreso" => $request->input("mes_ingreso"),
             "anio_ingreso" => intval($request->input("anio_ingreso")),
         ]);
-        // $institucion->direccion()->update([
-        //     "direccion_nombre" => $request->input("direccion_nombre"),
-        //     "url_direccion" => $request->input("url_direccion"),
-        //     "latitud" => floatval($request->input("latitud")),
-        //     "longitud" => floatval($request->input("longitud")),
-        // ]);
         $institucion->direccion()->delete();
-        $institucion->direccion()->saveMany($request->input("direcciones"));
-
+        foreach ($request->input("direcciones") as $direccion) {
+            Direccion::updateOrCreate([
+                "direccion_nombre" => $direccion["direccion_nombre"],
+                "url_direccion" => $direccion["url_direccion"],
+                "latitud" => floatval($direccion["latitud"]),
+                "longitud" => floatval($direccion["longitud"]),
+                "institucion_id" => $institucion->id,
+            ]);
+        }
         $contacto = Contacto::where("institucion_id", "=", $institucion->id)->first();
         $contacto->contacto_correo()->delete();
-        $contacto->contacto_correo()->saveMany($request->input("correos"));
+
+        foreach ($request->input("correos") as $correo) {
+            Contacto_correo::updateOrCreate(["correo_contacto" => $correo["correo_contacto"], "contacto_id" => $contacto->id]);
+        }
         $contacto->contacto_telefono()->delete();
-        $contacto->contacto_telefono()->saveMany($request->input("telefonos"));
-        // $contacto->contacto_correo()->update(["correo_contacto" => $request->input("correo_contacto")]);
-        // $contacto->contacto_telefono()->update(["telefono_contacto" => $request->input("telefono_contacto")]);
+        foreach ($request->input("telefonos") as $telefono) {
+            Contacto_telefono::updateOrCreate(["telefono_contacto" => trim($telefono["telefono_contacto"]), "contacto_id" => $contacto->id]);
+        }
         return response()->json(["message" => "Informacion Actualizada"], 200);
     }
 
