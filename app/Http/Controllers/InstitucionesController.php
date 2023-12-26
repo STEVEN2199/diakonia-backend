@@ -107,7 +107,7 @@ class InstitucionesController extends Controller
         }
 
         foreach ($request->input("telefonos") as $telefono) {
-            Contacto_telefono::updateOrCreate(["telefono_contacto" => trim($telefono["correo_contacto"]), "contacto_id" => $contacto->id]);
+            Contacto_telefono::updateOrCreate(["telefono_contacto" => trim($telefono["telefono_contacto"]), "contacto_id" => $contacto->id]);
         }
 
         // Contacto_telefono::updateOrCreate(["telefono_contacto" => trim($request->input("telefono_contacto")), "contacto_id" => $contacto->id]);
