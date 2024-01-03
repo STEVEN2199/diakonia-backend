@@ -8,6 +8,7 @@ use App\Http\Controllers\ReadDataController;
 use App\Http\Controllers\RolesController;
 use App\Http\Controllers\UsersController;
 use App\Models\Institucion;
+use App\Http\Controllers\BeneficiarioXAnioController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,6 +29,8 @@ use App\Models\Institucion;
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
 Route::post('logout', [AuthController::class, 'logout']);
+// Route::get('/beneficiarios', [BeneficiarioXAnioController::class, 'index']);
+// Route::apiResource('beneficiarios', BeneficiarioXAnioController::class);
 
 Route::middleware(["auth:sanctum", 'role:Administrador'])->group(function () {
     Route::get('caracterizacion', [ReadDataController::class, 'obtenerCaracterizaciones']);
@@ -37,6 +40,7 @@ Route::middleware(["auth:sanctum", 'role:Administrador'])->group(function () {
     Route::delete("/users/{id}", [UsersController::class, 'destroy']);
     Route::delete("/users/{id}", [UsersController::class, 'destroy']);
     Route::get('userProfile', [UsersController::class, 'userProfile']);
+    Route::apiResource('beneficiarios', BeneficiarioXAnioController::class);
 
 });
 
