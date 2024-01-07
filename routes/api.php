@@ -29,7 +29,7 @@ use App\Http\Controllers\BeneficiarioXAnioController;
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
 Route::post('logout', [AuthController::class, 'logout']);
-// Route::get('/beneficiarios', [BeneficiarioXAnioController::class, 'index']);
+// Route::get('/beneficiarios-anio', [BeneficiarioXAnioController::class, 'rangoAnio']);
 // Route::apiResource('beneficiarios', BeneficiarioXAnioController::class);
 
 Route::middleware(["auth:sanctum", 'role:Administrador'])->group(function () {
@@ -41,6 +41,7 @@ Route::middleware(["auth:sanctum", 'role:Administrador'])->group(function () {
     Route::delete("/users/{id}", [UsersController::class, 'destroy']);
     Route::get('userProfile', [UsersController::class, 'userProfile']);
     Route::apiResource('beneficiarios', BeneficiarioXAnioController::class);
+    Route::get('/beneficiarios-anio', [BeneficiarioXAnioController::class, 'rangoAnio']);
 
 });
 

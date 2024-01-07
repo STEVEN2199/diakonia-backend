@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\BeneficiarioXAnio;
+use Illuminate\Support\Facades\DB;
 
 class BeneficiarioXAnioController extends Controller
 {
@@ -14,6 +15,17 @@ class BeneficiarioXAnioController extends Controller
         // $beneficiarios = BeneficiarioXAnio::all();
         $beneficiarios = BeneficiarioXAnio::orderBy('anio', 'asc')->get();
         return response()->json($beneficiarios);
+    }
+
+    public function rangoAnio(Request $request){
+
+        $beneficiarios = DB::table('beneficiarios_x_anio')
+            ->whereBetween('anio', [$request->anioInicio, $request->anioFin])
+            ->orderBy('anio', 'asc')
+            ->get();
+
+        return response()->json($beneficiarios);
+
     }
 
     public function store(Request $request)
