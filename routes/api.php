@@ -9,6 +9,7 @@ use App\Http\Controllers\RolesController;
 use App\Http\Controllers\UsersController;
 use App\Models\Institucion;
 use App\Http\Controllers\BeneficiarioXAnioController;
+use App\Http\Controllers\InstitucionesXCategoriaController;
 use App\Http\Controllers\InstitucionesXEstadoController;
 use App\Models\InstitucionesXEstado;
 
@@ -32,7 +33,7 @@ Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
 Route::post('logout', [AuthController::class, 'logout']);
 // Route::get('/beneficiarios-anio', [BeneficiarioXAnioController::class, 'rangoAnio']);
-// Route::get('instituciones-estado', [InstitucionesXEstadoController::class, 'obtenerInstitucionesXEstado']);
+// Route::get('instituciones-categoria', [InstitucionesXCategoriaController::class, 'obtenerInstitucionesXCategoria']);
 // Route::apiResource('beneficiarios', BeneficiarioXAnioController::class);
 
 Route::middleware(["auth:sanctum", 'role:Administrador'])->group(function () {
@@ -46,6 +47,7 @@ Route::middleware(["auth:sanctum", 'role:Administrador'])->group(function () {
     Route::apiResource('beneficiarios', BeneficiarioXAnioController::class);
     Route::get('/beneficiarios-anio', [BeneficiarioXAnioController::class, 'rangoAnio']);
     Route::get('instituciones-estado', [InstitucionesXEstadoController::class, 'obtenerInstitucionesXEstado']);
+    Route::get('instituciones-categoria', [InstitucionesXCategoriaController::class, 'obtenerInstitucionesXCategoria']);
 
 });
 
