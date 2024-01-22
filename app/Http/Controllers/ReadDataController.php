@@ -22,6 +22,7 @@ use App\Models\Red_bda;
 use App\Models\Sectorizacion_institucion;
 use App\Models\Tipo_poblacion;
 use App\Models\Caracterizacion;
+use App\Models\InstitucionesAuditoria;
 use App\Models\Sectorizacion;
 use PhpParser\Node\Stmt\TryCatch;
 
@@ -577,5 +578,40 @@ class ReadDataController extends Controller
         $estados = DB::table('estado')->distinct('nombre_estado')->get()->toArray();
         $caracterizaciones = DB::table('caracterizacion')->get()->toArray();
         return response()->json(["tipos_poblacion" => $tiposPoblacion, "caracterizaciones" => $caracterizaciones, "actividades" => $actividades, "sectorizaciones" => $sectorizaciones, "estados" => $estados, "clasificaciones" => $clasificaciones], 200);
+    }
+
+
+    public function readInstitucionesAuditoria(Request $request)
+    {
+        $instituciones = DB::table('institucion_auditoria')
+        ->where('anio', [ $request->anioFin])
+        ->orderBy('numero_beneficiarios', 'desc')
+        ->get();
+
+        return response()->json($instituciones);
+    }
+
+    public function readInstitucionesAuditoriaCategoria(Request $request)
+    {
+        $instituciones = DB::table('institucion_auditoria')
+        ->where('anio', [ $request->anioFin])
+        ->whereBetween('numero_beneficiarios', [$request->minBeneficiarios, $request->maxBeneficiarios])
+        ->orderBy('numero_beneficiarios', 'desc')
+        ->get();
+
+
+        return response()->json($instituciones);
+    }
+
+    public function readInstitucionesAuditoriaCategoriaMax(Request $request)
+    {
+        $instituciones = DB::table('institucion_auditoria')
+        ->where('anio', [ $request->anioFin])
+        ->where('numero_beneficiarios', '>', $request->minBeneficiarios)
+        ->orderBy('numero_beneficiarios', 'desc')
+        ->get();
+
+
+        return response()->json($instituciones);
     }
 }

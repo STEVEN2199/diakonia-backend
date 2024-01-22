@@ -32,7 +32,8 @@ use App\Models\InstitucionesXEstado;
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
 Route::post('logout', [AuthController::class, 'logout']);
-// Route::get('/beneficiarios-anio', [BeneficiarioXAnioController::class, 'rangoAnio']);
+Route::get('auditoria', [ReadDataController::class, 'readInstitucionesAuditoriaCategoria']);
+Route::get('auditoria1', [ReadDataController::class, 'readInstitucionesAuditoriaCategoriaMax']);
 // Route::get('instituciones-categoria', [InstitucionesXCategoriaController::class, 'obtenerInstitucionesXCategoria']);
 // Route::apiResource('beneficiarios', BeneficiarioXAnioController::class);
 
@@ -48,6 +49,9 @@ Route::middleware(["auth:sanctum", 'role:Administrador'])->group(function () {
     Route::get('/beneficiarios-anio', [BeneficiarioXAnioController::class, 'rangoAnio']);
     Route::get('instituciones-estado', [InstitucionesXEstadoController::class, 'obtenerInstitucionesXEstado']);
     Route::get('instituciones-categoria', [InstitucionesXCategoriaController::class, 'obtenerInstitucionesXCategoria']);
+    Route::get('instituciones_auditoria', [ReadDataController::class, 'readInstitucionesAuditoria']);
+    Route::get('instituciones-categoria-bronce-plata', [ReadDataController::class, 'readInstitucionesAuditoriaCategoria']);
+    Route::get('instituciones-categoria-oro', [ReadDataController::class, 'readInstitucionesAuditoriaCategoriaMax']);
 
 });
 

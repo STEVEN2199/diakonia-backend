@@ -61,5 +61,13 @@ class BeneficiariosXAnioSeeder extends Seeder
             'created_at' => now(),
             'updated_at' => now(),
         ]);
+
+        DB::table('beneficiarios_x_anio')->insert([
+            'anio' => 2024,
+            'numero_instituciones' => 174,
+            'numero_beneficiarios' => 51441,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
     }
 }

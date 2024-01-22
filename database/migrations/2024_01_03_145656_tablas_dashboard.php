@@ -59,5 +59,6 @@ return new class extends Migration
     {
         //
         Schema::dropIfExists('beneficiarios_x_anio');
+        Schema::dropIfExists('instituciones_x_estado');
     }
 };

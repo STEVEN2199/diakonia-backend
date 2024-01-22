@@ -12,14 +12,26 @@ return new class extends Migration
     public function up(): void
     {
         //
-        Schema::create('mejores_instituciones_x_categoria', function (Blueprint $table) {
+        // Schema::create('mejores_instituciones_x_categoria', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->unsignedBigInteger('anio');
+        //     $table->unsignedBigInteger('id_institucion');
+        //     $table->unsignedBigInteger('puesto');
+        //     $table->unsignedBigInteger('categoria');
+        //     $table->timestamps();
+        // });
+
+        Schema::create('institucion_auditoria', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('anio');
-            $table->unsignedBigInteger('id_institucion');
-            $table->unsignedBigInteger('puesto');
-            $table->unsignedBigInteger('categoria');
+            $table->string('nombre',200);
+            $table->string('representante_legal',250);
+            $table->string('ruc',200);
+            $table->integer('numero_beneficiarios');
+            $table->integer('anio');
             $table->timestamps();
         });
+    
+        
     }
 
     /**
@@ -28,7 +40,7 @@ return new class extends Migration
     public function down(): void
     {
         //
-        Schema::dropIfExists('mejores_instituciones_x_categoria');
+        Schema::dropIfExists('institucion_auditoria');
 
     }
 };
