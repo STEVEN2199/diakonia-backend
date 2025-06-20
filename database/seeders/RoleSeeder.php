@@ -3,8 +3,10 @@
 namespace Database\Seeders;
 
 use App\Models\Clasificacion;
+use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -18,6 +20,9 @@ class RoleSeeder extends Seeder
         $role1 = Role::create(['name' => 'Administrador']);
         $role2 = Role::create(['name' => 'Usuario General']);
         $role3 = Role::create(['name' => 'Usuario Invitado']);
+
+
+
 
         # Auth Route
         Permission::create(['name' => 'DataUsers.AllUsers'])->syncRoles([$role1]);
@@ -33,6 +38,16 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'sectores.obtenerSectores'])->syncRoles([$role1]);
         Permission::create(['name' => 'actividades.obtenerActividades'])->syncRoles([$role1]);
         Permission::create(['name' => 'ingresarInstitucion.registrarInstitucion'])->syncRoles([$role1]);
+
+        # SuperUser
+        User::create([
+            'name' => 'SuperUser',
+            'apellido' => 'Diakonia',
+            'email' => 'super.user@diakonia.com.ec',
+            'telefono' => '123456',
+            'cargo_institucional' => 'Administrador',
+            'password' => Hash::make('Diakonia2025ec')
+        ])->assignRole('Administrador');
 
         # Clasificacion
         Clasificacion::create(["nombre_clasificacion" => "Salud"]);
