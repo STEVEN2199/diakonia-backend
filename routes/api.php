@@ -43,7 +43,6 @@ Route::middleware(["auth:sanctum", 'role:Administrador'])->group(function () {
     Route::get('DataUsers', [AuthController::class, 'AllUsers']);
     Route::put("/users/{id}", [UsersController::class, 'edit']);
     Route::delete("/users/{id}", [UsersController::class, 'destroy']);
-    Route::delete("/users/{id}", [UsersController::class, 'destroy']);
     Route::get('userProfile', [UsersController::class, 'userProfile']);
     Route::apiResource('beneficiarios', BeneficiarioXAnioController::class);
     Route::get('/beneficiarios-anio', [BeneficiarioXAnioController::class, 'rangoAnio']);
@@ -52,7 +51,6 @@ Route::middleware(["auth:sanctum", 'role:Administrador'])->group(function () {
     Route::get('instituciones_auditoria', [ReadDataController::class, 'readInstitucionesAuditoria']);
     Route::get('instituciones-categoria-bronce-plata', [ReadDataController::class, 'readInstitucionesAuditoriaCategoria']);
     Route::get('instituciones-categoria-oro', [ReadDataController::class, 'readInstitucionesAuditoriaCategoriaMax']);
-
 });
 
 Route::get("roles", [RolesController::class, 'index']);
