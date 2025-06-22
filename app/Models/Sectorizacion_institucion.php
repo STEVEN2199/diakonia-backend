@@ -9,6 +9,6 @@ class Sectorizacion_institucion extends Model
 {
     use HasFactory;
     protected $table = 'sectorizacion_institucion';
-    protected $fillable=['sector_id','institucion_id'];
-
+    protected $fillable = ['sector_id', 'institucion_id'];
+    protected $hidden = ['created_at', 'updated_at'];
 }

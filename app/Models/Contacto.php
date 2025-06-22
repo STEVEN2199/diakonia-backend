@@ -10,6 +10,7 @@ class Contacto extends Model
     use HasFactory;
     protected $table = 'contacto';
     protected $fillable = ['nombre', 'apellido', 'institucion_id'];
+    protected $hidden = ['created_at', 'updated_at'];
 
     public function contacto_correo()
     {
